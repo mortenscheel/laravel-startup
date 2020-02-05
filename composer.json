@@ -1,0 +1,45 @@
+{
+    "name": "mortenscheel/laravel-startup",
+    "description": "Personal tool collection for Laravel / PHP development",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Morten Scheel",
+            "email": "morten@mortenscheel.com"
+        }
+    ],
+    "homepage": "https://github.com/mortenscheel/laravel-startup",
+    "keywords": ["Laravel", "Tools"],
+    "require": {
+        "illuminate/support": "~5|~6",
+        "symfony/process": "^4.0",
+        "lorisleiva/laravel-actions": "^0.2.5",
+        "php-school/cli-menu": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3|~4",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MortenScheel\\LaravelStartup\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MortenScheel\\LaravelStartup\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MortenScheel\\LaravelStartup\\LaravelStartupServiceProvider"
+            ],
+            "aliases": {
+                "LaravelStartup": "MortenScheel\\LaravelStartup\\Facades\\LaravelStartup"
+            }
+        }
+    }
+}
