@@ -13,6 +13,6 @@ class LaravelStartup extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'laraveltools';
+        return 'laravel-startup';
     }
 }

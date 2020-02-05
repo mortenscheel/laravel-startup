@@ -1,0 +1,27 @@
+git:
+  init: true
+  commit: "Initial commit"
+  submodules:
+    - https://github.com/Laradock/laradock.git
+packages:
+  barryvdh/laravel-ide-helper:
+    dev: true
+    post-install:
+      publish:
+        provider: Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider
+  fruitcake/laravel-cors:
+    post-install:
+      publish:
+        tag: cors
+      append-array:
+        file: app/Http/Kernel.php
+        array: "$middleware"
+        value: \Fruitcake\Cors\HandleCors::class
+  friendsofphp/php-cs-fixer:
+    version: ^2.16
+    post-install:
+      command:
+        name: "startup:cs-fixer"
+        arguments:
+          --update-phpstorm-config: true
+

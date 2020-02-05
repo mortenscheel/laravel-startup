@@ -38,9 +38,9 @@ class LaravelStartupServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-tools.php', 'laravel-tools');
+        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-startup.php', 'laravel-startup');
 
-        $this->app->singleton('laravel-tools', function ($app) {
+        $this->app->singleton('laravel-startup', function ($app) {
             return new LaravelStartup;
         });
     }
@@ -52,7 +52,7 @@ class LaravelStartupServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['laravel-tools'];
+        return ['laravel-startup'];
     }
 
     /**
@@ -64,13 +64,13 @@ class LaravelStartupServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__ . '/../config/laravel-tools.php' => config_path('laravel-tools.php'),
-        ], 'laraveltools.config');
+            __DIR__ . '/../config/laravel-startup.php' => config_path('laravel-startup.php'),
+        ], 'laravel-startup.config');
 
         // Registering package commands.
         $this->commands([
             \MortenScheel\LaravelStartup\Console\Commands\InstallPhpCsFixerCommand::class,
-            InstallPackagesCommand::class
+            \MortenScheel\LaravelStartup\Console\Commands\StartupCommand::class,
         ]);
     }
 }

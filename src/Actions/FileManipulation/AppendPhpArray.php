@@ -12,12 +12,12 @@ class AppendPhpArray extends BaseAction
     public function rules(): array
     {
         return [
-            'file_path' => [
+            'file' => [
                 'required',
                 new FileExistsRule(),
                 new FileIsWriteableRule()
             ],
-            'variable_name' => [
+            'array' => [
                 'required',
                 'string'
             ],
@@ -29,12 +29,13 @@ class AppendPhpArray extends BaseAction
 
     public function handle(): bool
     {
-        $this->output->writeln('Wassup');
-        return true;
         // Ensure dollar character is escaped
-        $variable_name = \preg_replace("/(?<!\\\\)\\\$/", "\\\\\$$1", \trim($this->get('variable_name')));
+        $variable_name = \preg_replace("/(?<!\\\\)\\\$/", "\\\\\$$1", \trim($this->get('array')));
         $variable_capture_pattern = \sprintf('~%s\s*=\s*\[([^\]]+)]~mu', $variable_name);
-        $file_path = $this->get('file_path');
+        $file_path = $this->get('file');
+        if (mb_stripos($file_path, 'app') === 0){
+            $file_path = base_path($file_path);
+        }
         $original = \File::get($file_path);
         $value = $this->get('value');
         if (\preg_match($variable_capture_pattern, $original, $variable_capture_match, \PREG_OFFSET_CAPTURE)) {

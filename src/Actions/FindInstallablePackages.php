@@ -40,11 +40,6 @@ class FindInstallablePackages extends BaseAction
         'Highlight',
         'Opis'];
 
-    public function rules(): array
-    {
-        return [];
-    }
-
     public function handle()
     {
         $class_map = require base_path('vendor/composer/autoload_classmap.php');

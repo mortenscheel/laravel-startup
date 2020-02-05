@@ -10,11 +10,11 @@ trait RunsProcessCommands
 {
     /**
      * Run command with streaming output
-     * @param $command
+     * @param array $command
      * @return int
      * @noinspection PhpUnusedParameterInspection
      */
-    protected function runProcess($command): int
+    protected function runProcess(array $command): int
     {
         $process = new Process($command);
         $process->setTty(config('laravel-tools.tty_commands'));

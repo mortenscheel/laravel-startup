@@ -22,7 +22,5 @@ abstract class BaseAction extends Action
         }
     }
 
-    abstract public function rules(): array;
-
     abstract public function handle();
 }

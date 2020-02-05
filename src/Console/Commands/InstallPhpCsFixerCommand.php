@@ -2,7 +2,6 @@
 
 namespace MortenScheel\LaravelStartup\Console\Commands;
 
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -13,7 +12,7 @@ class InstallPhpCsFixerCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'laravel-tools:install-cs-fixer {--yes}';
+    protected $signature = 'startup:cs-fixer {--update-phpstorm-config}';
 
     /**
      * The console command description.
@@ -22,6 +21,8 @@ class InstallPhpCsFixerCommand extends BaseCommand
      */
     protected $description = 'Install php-cs-fixer and publish .php_cs config';
 
+    protected $hidden = true;
+
     /**
      * Execute the console command.
      *
@@ -29,35 +30,21 @@ class InstallPhpCsFixerCommand extends BaseCommand
      */
     public function handle()
     {
-        /** @noinspection ClassConstantCanBeUsedInspection */
-        if (!\class_exists('PhpCsFixer\Config')) {
-            $this->info('Installing php-cs-fixer');
-            if (!$this->runProcess(['composer', 'require', 'friendsofphp/php-cs-fixer'])) {
-                $this->error('Installation failed');
-                return 1;
-            }
+        $this->info('Installing php-cs-fixer');
+//        if (!$this->runProcess(['composer', 'require', 'friendsofphp/php-cs-fixer'])) {
+//            $this->error('Installation failed');
+//            return 1;
+//        }
+        $config = \File::get(__DIR__ . '/../../../stubs/.php_cs.php');
+        \File::put(base_path('.php_cs'), $config);
+        $this->info('.php_cs was generated');
+        if ($this->option('update-phpstorm-config')) {
+            $this->updateInspectionProfiles();
         }
-        try {
-            $stub = \File::get(__DIR__ . '/../../stubs/.php_cs-laravel.php');
-            $destination = base_path('.php_cs');
-            if (!\File::exists($destination) ||
-                $this->option('yes') ||
-                $this->confirm('.php_cs file already exists. Overwrite?')) {
-                \File::put($destination, $stub);
-                $this->info('.php_cs was generated');
-            }
-            if ($this->option('yes') ||
-                $this->confirm('Update PhpStorm inspection profiles?')) {
-                $this->updateInspectionProfiles();
-            }
-            return 0;
-        } catch (FileNotFoundException $e) {
-            $this->error($e->getMessage());
-            return 1;
-        }
+        return 0;
     }
 
-    private function updateInspectionProfiles()
+    private function updateInspectionProfiles(): void
     {
         $finder = Finder::create()
             ->in(base_path('.idea/InspectionProfiles'))
@@ -87,7 +74,7 @@ class InstallPhpCsFixerCommand extends BaseCommand
                 $parent->appendChild($target_node);
             }
             $attributes = [
-                'class' =>   'PhpCSFixerValidationInspection',
+                'class' => 'PhpCSFixerValidationInspection',
                 'enabled' => 'true',
                 'level' => 'WEAK WARNING',
                 'enabled_by_default' => 'true'
@@ -114,5 +101,6 @@ class InstallPhpCsFixerCommand extends BaseCommand
             }
             $dom->save($file->getPathname());
         }
+        $this->info('PhpStorm configuration updated for CS Fixer');
     }
 }
