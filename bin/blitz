@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+use MortenScheel\LaravelBlitz\Commands\ConfigCommand;
+use MortenScheel\LaravelBlitz\Commands\InitCommand;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$app = new Symfony\Component\Console\Application('Laravel Blitz', '0.1');
+$app->add(new InitCommand());
+$app->add(new ConfigCommand());
+/** @noinspection PhpUnhandledExceptionInspection */
+$app->run();
+
+function array_get(array $array, $key, $default = null)
+{
+    return \array_key_exists($key, $array) ?
+        $array[$key] :
+        $default;
+}

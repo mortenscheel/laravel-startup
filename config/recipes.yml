@@ -1,0 +1,58 @@
+- debug:
+    - action: CaptureReplace
+      file: config/auth.php
+      capture: "~'guards'.*'api'.*'driver' => '(\\w+)'~mUs"
+      replacement: passport
+- ide-helper:
+    - action: ComposerInstall
+      package: barryvdh/laravel-ide-helper
+      dev: true
+      then:
+        - action: ArtisanCommand
+          command: "vendor:publish"
+          args:
+            --provider: Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider
+            --tag: config
+- cors:
+    - action: ComposerInstall
+      package: fruitcake/laravel-cors
+      then:
+        - action: ArtisanCommand
+          command: "vendor:publish"
+          args:
+            --tag: cors
+        - action: AppendPhpArray
+          file: app/Http/Kernel.php
+          array: "$middleware"
+          value: \Fruitcake\Cors\HandleCors::class
+- passport:
+    - action: ComposerInstall
+      package: laravel/passport
+      then:
+        - action: ArtisanCommand
+          command: "migrate"
+        - action: ArtisanCommand
+          command: "passport:install"
+        - action: AddClassImport
+          class: App\User
+          import: \Laravel\Passport\HasApiToken
+        - action: AddTrait
+          class: App\User
+          trait: HasApiToken
+        - action: AppendPhpMethod
+          class: App\Providers\AuthServiceProvider
+          method: boot
+          append: "\Laravel\Passport\Passport::routes();"
+        - action: CaptureReplace
+          file: config/auth.php
+          capture: ""
+          replacement: ""
+- telescope:
+    - action: ComposerInstall
+      package: laravel/telescope
+      then:
+        - action: ArtisanCommand
+          command: "telescope:install"
+        - action: ArtisanCommand
+          command: migrate
+
