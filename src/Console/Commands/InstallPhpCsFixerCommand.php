@@ -30,11 +30,6 @@ class InstallPhpCsFixerCommand extends BaseCommand
      */
     public function handle()
     {
-        $this->info('Installing php-cs-fixer');
-//        if (!$this->runProcess(['composer', 'require', 'friendsofphp/php-cs-fixer'])) {
-//            $this->error('Installation failed');
-//            return 1;
-//        }
         $config = \File::get(__DIR__ . '/../../../stubs/.php_cs.php');
         \File::put(base_path('.php_cs'), $config);
         $this->info('.php_cs was generated');
@@ -46,8 +41,13 @@ class InstallPhpCsFixerCommand extends BaseCommand
 
     private function updateInspectionProfiles(): void
     {
+        $path = base_path('.idea/InspectionProfiles');
+        if (!\File::exists($path)) {
+            $this->warn('.idea folder not found. Skipping inspection profile update.');
+            return;
+        }
         $finder = Finder::create()
-            ->in(base_path('.idea/InspectionProfiles'))
+            ->in($path)
             ->name('*.xml')
             ->files();
         /** @var SplFileInfo $file */
