@@ -1,11 +1,11 @@
 <?php
 
-namespace MortenScheel\LaravelStartup\Actions\FileManipulation;
+namespace MortenScheel\LaravelBlitz\Actions\FileManipulation;
 
 use Illuminate\Console\Command;
-use MortenScheel\LaravelStartup\Actions\BaseAction;
-use MortenScheel\LaravelStartup\Rules\FileExistsRule;
-use MortenScheel\LaravelStartup\Rules\FileIsWriteableRule;
+use MortenScheel\LaravelBlitz\Actions\BaseAction;
+use MortenScheel\LaravelBlitz\Rules\FileExistsRule;
+use MortenScheel\LaravelBlitz\Rules\FileIsWriteableRule;
 
 class AppendPhpArray extends BaseAction
 {

@@ -1,6 +1,6 @@
 {
-    "name": "mortenscheel/laravel-startup",
-    "description": "Personal tool collection for Laravel / PHP development",
+    "name": "mortenscheel/laravel-blitz",
+    "description": "Convenient tool to bootstrap a Laravel project with pre-configured packages",
     "license": "MIT",
     "authors": [
         {
@@ -8,11 +8,10 @@
             "email": "morten@mortenscheel.com"
         }
     ],
-    "homepage": "https://github.com/mortenscheel/laravel-startup",
+    "homepage": "https://github.com/mortenscheel/laravel-blitz",
     "keywords": ["Laravel", "Tools"],
     "require": {
         "illuminate/support": "~5|~6",
-        "lorisleiva/laravel-actions": "^0.2.5",
         "symfony/yaml": "^4.4"
     },
     "require-dev": {
@@ -23,21 +22,21 @@
     },
     "autoload": {
         "psr-4": {
-            "MortenScheel\\LaravelStartup\\": "src/"
+            "MortenScheel\\LaravelBlitz\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MortenScheel\\LaravelStartup\\Tests\\": "tests"
+            "MortenScheel\\LaravelBlitz\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "MortenScheel\\LaravelStartup\\LaravelStartupServiceProvider"
+                "MortenScheel\\LaravelBlitz\\LaravelBlitzServiceProvider"
             ],
             "aliases": {
-                "LaravelStartup": "MortenScheel\\LaravelStartup\\Facades\\LaravelStartup"
+                "LaravelBlitz": "MortenScheel\\LaravelBlitz\\Facades\\LaravelBlitz"
             }
         }
     }

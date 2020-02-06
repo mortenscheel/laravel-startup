@@ -1,10 +1,10 @@
 <?php
 
-namespace MortenScheel\LaravelStartup\Facades;
+namespace MortenScheel\LaravelBlitz\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class LaravelStartup extends Facade
+class LaravelBlitz extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -13,6 +13,6 @@ class LaravelStartup extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'laravel-startup';
+        return 'laravel-blitz';
     }
 }

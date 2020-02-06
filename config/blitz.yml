@@ -17,11 +17,4 @@ packages:
         file: app/Http/Kernel.php
         array: "$middleware"
         value: \Fruitcake\Cors\HandleCors::class
-  friendsofphp/php-cs-fixer:
-    version: ^2.16
-    post-install:
-      command:
-        name: "startup:cs-fixer"
-        arguments:
-          --update-phpstorm-config: true
 

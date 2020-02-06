@@ -1,19 +1,19 @@
 <?php
 
-namespace MortenScheel\LaravelStartup;
+namespace MortenScheel\LaravelBlitz;
 
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\ServiceProvider;
-use MortenScheel\LaravelStartup\Console\Commands\InstallPackagesCommand;
-use MortenScheel\LaravelStartup\Console\ConsoleOutput;
+use MortenScheel\LaravelBlitz\Console\Commands\InstallPackagesCommand;
+use MortenScheel\LaravelBlitz\Console\ConsoleOutput;
 
 /**
- * Class LaravelStartupServiceProvider
- * @package MortenScheel\LaravelStartup
+ * Class LaravelBlitzServiceProvider
+ * @package MortenScheel\LaravelBlitz
  *
  * @property \Illuminate\Contracts\Foundation\Application $app
  */
-class LaravelStartupServiceProvider extends ServiceProvider
+class LaravelBlitzServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
@@ -38,10 +38,10 @@ class LaravelStartupServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-startup.php', 'laravel-startup');
+        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-blitz.php', 'laravel-blitz');
 
-        $this->app->singleton('laravel-startup', function ($app) {
-            return new LaravelStartup;
+        $this->app->singleton('laravel-blitz', function ($app) {
+            return new LaravelBlitz;
         });
     }
 
@@ -52,7 +52,7 @@ class LaravelStartupServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['laravel-startup'];
+        return ['laravel-blitz'];
     }
 
     /**
@@ -64,13 +64,12 @@ class LaravelStartupServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__ . '/../config/laravel-startup.php' => config_path('laravel-startup.php'),
-        ], 'laravel-startup.config');
+            __DIR__ . '/../config/laravel-blitz.php' => config_path('laravel-blitz.php'),
+        ], 'laravel-blitz.config');
 
         // Registering package commands.
         $this->commands([
-            \MortenScheel\LaravelStartup\Console\Commands\InstallPhpCsFixerCommand::class,
-            \MortenScheel\LaravelStartup\Console\Commands\StartupCommand::class,
+            \MortenScheel\LaravelBlitz\Console\Commands\BlitzCommand::class,
         ]);
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace MortenScheel\LaravelStartup\Concerns;
+namespace MortenScheel\LaravelBlitz\Concerns;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
-use MortenScheel\LaravelStartup\Console\ConsoleOutput;
+use MortenScheel\LaravelBlitz\Console\ConsoleOutput;
 use Symfony\Component\Process\Process;
 
 trait RunsProcessCommands

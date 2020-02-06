@@ -1,13 +1,13 @@
 <?php
 /** @noinspection PhpHierarchyChecksInspection */
 
-namespace MortenScheel\LaravelStartup\Console;
+namespace MortenScheel\LaravelBlitz\Console;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class ConsoleOutput
- * @package MortenScheel\LaravelStartup\Console
+ * @package MortenScheel\LaravelBlitz\Console
  * @mixin OutputInterface
  */
 class ConsoleOutput

@@ -1,27 +1,27 @@
 <?php
 
 
-namespace MortenScheel\LaravelStartup\Console\Commands;
+namespace MortenScheel\LaravelBlitz\Console\Commands;
 
 use Illuminate\Support\Arr;
-use MortenScheel\LaravelStartup\Actions\FileManipulation\AppendPhpArray;
+use MortenScheel\LaravelBlitz\Actions\FileManipulation\AppendPhpArray;
 use Symfony\Component\Yaml\Yaml;
 
-class StartupCommand extends BaseCommand
+class BlitzCommand extends BaseCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'startup:bootstrap';
+    protected $signature = 'blitz';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Bootstrap project according to startup.yml';
+    protected $description = 'Bootstrap project according to blitz.yml';
 
     /**
      * Execute the console command.
@@ -30,7 +30,7 @@ class StartupCommand extends BaseCommand
      */
     public function handle()
     {
-        $config = Yaml::parseFile(base_path('startup.yml'));
+        $config = Yaml::parseFile(base_path('blitz.yml'));
         if ($git = Arr::get($config, 'git')) {
             $this->initializeGit($git);
         }

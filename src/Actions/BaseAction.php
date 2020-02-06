@@ -1,12 +1,11 @@
 <?php
 
-namespace MortenScheel\LaravelStartup\Actions;
+namespace MortenScheel\LaravelBlitz\Actions;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Lorisleiva\Actions\Action;
-use MortenScheel\LaravelStartup\Console\ConsoleOutput;
+use MortenScheel\LaravelBlitz\Console\ConsoleOutput;
 
-abstract class BaseAction extends Action
+abstract class BaseAction
 {
     /**
      * @var ConsoleOutput
@@ -15,7 +14,6 @@ abstract class BaseAction extends Action
 
     public function __construct(array $attributes = [])
     {
-        parent::__construct($attributes);
         try {
             $this->output = app()->make(ConsoleOutput::class);
         } catch (BindingResolutionException $e) {

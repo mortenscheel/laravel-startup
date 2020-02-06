@@ -1,9 +1,9 @@
 <?php
 
-namespace MortenScheel\LaravelStartup\Console\Commands;
+namespace MortenScheel\LaravelBlitz\Console\Commands;
 
 use Illuminate\Console\Command;
-use MortenScheel\LaravelStartup\Concerns\RunsProcessCommands;
+use MortenScheel\LaravelBlitz\Concerns\RunsProcessCommands;
 
 abstract class BaseCommand extends Command
 {
