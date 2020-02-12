@@ -43,7 +43,7 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem
             $this->mkdir($this->getGlobalConfigFolder(), 0755);
         }
         if (!$this->exists($this->getGlobalConfigFilePath())) {
-            $this->copy(__DIR__ . '/../stubs/blitz.yml', $this->getGlobalConfigFilePath());
+            $this->copy(__DIR__ . '/../config/blitz.yml', $this->getGlobalConfigFilePath());
             return $this->getGlobalConfigFilePath();
         }
         return null;

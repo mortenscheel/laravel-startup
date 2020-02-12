@@ -2,16 +2,16 @@
 
 namespace MortenScheel\LaravelBlitz\Actions;
 
-class RunArtisanCommand extends Action
+class ArtisanCommand extends Action
 {
     /**
      * @var string
      */
-    private $command;
+    public $command;
     /**
      * @var array
      */
-    private $arguments;
+    public $arguments;
 
     /**
      * RunArtisanCommand constructor.
@@ -49,7 +49,7 @@ class RunArtisanCommand extends Action
             $this->error = 'Current folder is not a Laravel project';
             return false;
         }
-        $command = ['php', 'artisan', $this->command];
+        $command = [$this->getPhpExecutable(), '-n', 'artisan', $this->command];
         $arguments = $this->parseArtisanArguments($this->arguments);
         if (!$this->shell(\array_merge($command, $arguments))) {
             $this->error = 'Artisan command failed';

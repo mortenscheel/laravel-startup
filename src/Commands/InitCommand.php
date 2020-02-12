@@ -2,6 +2,9 @@
 
 namespace MortenScheel\LaravelBlitz\Commands;
 
+use MortenScheel\LaravelBlitz\Actions\ActionInterface;
+use MortenScheel\LaravelBlitz\Actions\ComposerInstall;
+use MortenScheel\LaravelBlitz\Concerns\ProcessRunner;
 use MortenScheel\LaravelBlitz\Git;
 use MortenScheel\LaravelBlitz\Parser\ConfigParser;
 use Symfony\Component\Console\Command\Command;
@@ -14,6 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class InitCommand extends Command
 {
+    use ProcessRunner;
 
     /**
      * Configure the command options.
@@ -54,12 +58,44 @@ class InitCommand extends Command
             $start = \microtime(true);
             $parser = new ConfigParser;
             $actions = $parser->getActions();
+            if ($actions->getMigrateCommand() && !$this->canMigrate()) {
+                $io->error('Unable to perform migrations. Please check the configuration.');
+                return 1;
+            }
             $io->writeln(\sprintf('<fg=white>Using %s</>', $parser->resolveConfigPath()));
             $io->write($actions->listActions());
             if (!$input->getOption('force') && !$io->confirm('Execute these action?')) {
                 return 0;
             }
-            foreach ($actions as $action) {
+            $require_dev = $actions->getInstallablePackages(true);
+            if ($require_dev->isNotEmpty()) {
+                $success = $this->task(
+                    $io,
+                    'Installing ' . $require_dev->count() . ' dev packages',
+                    function () use ($require_dev) {
+                        return $this->installMultiplePackages($require_dev, true);
+                    },
+                    'installing...'
+                );
+                if (!$success) {
+                    return 1;
+                }
+            }
+            $require = $actions->getInstallablePackages();
+            if ($require->isNotEmpty()) {
+                $success = $this->task(
+                    $io,
+                    'Installing ' . $require->count() . ' non-dev packages',
+                    function () use ($require) {
+                        return $this->installMultiplePackages($require);
+                    },
+                    'installing...'
+                );
+                if (!$success) {
+                    return 1;
+                }
+            }
+            foreach ($actions->getPostInstallActions() as $action) {
                 $success = $this->task($io, $action->getDescription(), function () use ($action) {
                     return $action->execute();
                 });
@@ -104,5 +140,40 @@ class InitCommand extends Command
             "$title: " . ($result ? '<info>✔</info>' : '<error>failed</error>')
         );
         return $result;
+    }
+
+    /**
+     * @param \MortenScheel\LaravelBlitz\Actions\ActionCollection $actions
+     * @param bool $dev
+     * @return bool
+     */
+    private function installMultiplePackages(\MortenScheel\LaravelBlitz\Actions\ActionCollection $actions, bool $dev = false)
+    {
+        $packages = $actions->map(function (ComposerInstall $action) {
+            return "{$action->package}={$action->version}";
+        })->toArray();
+        $command = \array_merge(
+            [
+                $this->getPhpExecutable(),
+                '-n',
+                $this->getComposerExecutable(),
+                'require',
+                '--no-interaction'
+            ],
+            $packages,
+            $dev ? ['--dev', '--no-update'] : []
+        );
+        return $this->shell($command, true);
+    }
+
+    private function canMigrate()
+    {
+        if ($this->shell([$this->getPhpExecutable(), '-n', 'artisan', 'migrate:status'], true)) {
+            return true;
+        }
+        if (\mb_stripos($this->process_output, 'migration table not found') !== false) {
+            return $this->shell([$this->getPhpExecutable(), '-n', 'artisan', 'migrate:install'], true);
+        }
+        return false;
     }
 }

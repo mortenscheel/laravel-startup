@@ -66,16 +66,6 @@ abstract class Action implements ActionInterface, Arrayable
         return array_get($map, $key);
     }
 
-    protected function getPhpExecutable()
-    {
-        return \rtrim(\shell_exec('which php'));
-    }
-
-    protected function getComposerExecutable()
-    {
-        return \rtrim(\shell_exec('which composer'));
-    }
-
     protected function getClassBaseName(string $class)
     {
         $parts = \explode("\\", $class);

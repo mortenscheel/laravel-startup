@@ -1,8 +1,3 @@
-- debug:
-    - action: CaptureReplace
-      file: config/auth.php
-      capture: "~'guards'.*'api'.*'driver' => '(\\w+)'~mUs"
-      replacement: passport
 - ide-helper:
     - action: ComposerInstall
       package: barryvdh/laravel-ide-helper
@@ -35,18 +30,21 @@
           command: "passport:install"
         - action: AddClassImport
           class: App\User
-          import: \Laravel\Passport\HasApiToken
+          import: Laravel\Passport\HasApiToken
         - action: AddTrait
           class: App\User
           trait: HasApiToken
+        - action: AddClassImport
+          class: App\Providers\AuthServiceProvider
+          import: Laravel\Passport\Passport
         - action: AppendPhpMethod
           class: App\Providers\AuthServiceProvider
           method: boot
-          append: "\Laravel\Passport\Passport::routes();"
+          append: "Passport::routes();"
         - action: CaptureReplace
           file: config/auth.php
-          capture: ""
-          replacement: ""
+          capture: "~'guards'.*'api'.*'driver' => '(\\w+)'~mUs"
+          replacement: passport
 - telescope:
     - action: ComposerInstall
       package: laravel/telescope

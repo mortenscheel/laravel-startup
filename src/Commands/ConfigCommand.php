@@ -42,9 +42,11 @@ class ConfigCommand extends Command
         if ($input->getOption('create')) {
             if ($path = $files->createConfig()) {
                 $io->success('Config created at ' . $path);
-            } else {
-                $io->comment('Config file already exists');
+                return 0;
             }
+
+            $io->comment('Config file already exists');
+            return 1;
         }
         if (!$files->hasBlitzConfig()) {
             $io->error('No config file found. Create one with the --create option.');

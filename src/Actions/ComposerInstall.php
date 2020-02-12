@@ -7,15 +7,15 @@ class ComposerInstall extends Action
     /**
      * @var string
      */
-    private $package;
+    public $package;
     /**
      * @var string|null
      */
-    private $version;
+    public $version;
     /**
      * @var bool
      */
-    private $dev;
+    public $dev;
 
     /**
      * InstallComposerPackage constructor.
@@ -33,7 +33,11 @@ class ComposerInstall extends Action
     {
         $description = "Install {$this->package}";
         if ($this->version) {
-            $description .= " ({$this->version})";
+            if ($this->version === '*') {
+                $description .= ' (latest)';
+            } else {
+                $description .= " ({$this->version})";
+            }
         }
         if ($this->dev) {
             $description .= ' as dev dependency';
@@ -68,7 +72,7 @@ class ComposerInstall extends Action
         return true;
     }
 
-    private function isInstalled(): bool
+    public function isInstalled(): bool
     {
         return $this->shell([
             $this->getPhpExecutable(),

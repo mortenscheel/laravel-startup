@@ -17,6 +17,8 @@ trait ProcessRunner
      */
     protected function shell(array $command, bool $silent = false): bool
     {
+        /** @noinspection SuspiciousAssignmentsInspection */
+        $silent = true; // test
         $this->process_output = '';
         $process = new Process($command, \getcwd(), null, null);
         $process->start();
@@ -28,5 +30,15 @@ trait ProcessRunner
             }
         }
         return $process->getExitCode() === 0;
+    }
+
+    protected function getPhpExecutable()
+    {
+        return \rtrim(\shell_exec('which php'));
+    }
+
+    protected function getComposerExecutable()
+    {
+        return \rtrim(\shell_exec('which composer'));
     }
 }
