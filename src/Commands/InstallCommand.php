@@ -7,15 +7,18 @@ use MortenScheel\LaravelBlitz\Actions\ComposerInstall;
 use MortenScheel\LaravelBlitz\Concerns\ProcessRunner;
 use MortenScheel\LaravelBlitz\Git;
 use MortenScheel\LaravelBlitz\Parser\ConfigParser;
+use MortenScheel\LaravelBlitz\Parser\ParserException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class InitCommand extends Command
+class InstallCommand extends Command
 {
     use ProcessRunner;
 
@@ -26,10 +29,11 @@ class InitCommand extends Command
      */
     protected function configure()
     {
-        $this
-            ->setName('init')
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Run without asking for confirmation.')
-            ->setDescription('Bootstrap a Laravel Application');
+        $this->setName('install')
+            ->addArgument('recipes', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Recipes to install, comma separated')
+            ->addOption('cookbook', null, InputOption::VALUE_OPTIONAL, 'Install recipes from a cookbook')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Install without asking for confirmation.')
+            ->setDescription('Install blitz recipes');
     }
 
     /**
@@ -43,27 +47,44 @@ class InitCommand extends Command
     {
         try {
             $io = new SymfonyStyle($input, $output);
-            $git = new Git();
-            if ($git->isExecutable()) {
-                if (!$git->isRepo() && $io->confirm('Initialize git repository?')) {
-                    $git->init();
-                }
-                if ($git->isDirty() && $io->confirm('Add and commit changes?')) {
-                    /** @var QuestionHelper $helper */
-                    $helper = $this->getHelper('question');
-                    $message = $helper->ask($input, $output, new Question("Write a commit message:\n", 'Initial commit'));
-                    $git->add() && $git->commit($message);
-                }
+            $recipes = $input->getArgument('recipes');
+            $cookbook = $input->getOption('cookbook');
+            if (empty($recipes) && $cookbook === null) {
+                $io->text('Please provide recipes or a cookbook path');
+                $io->text('Use <fg=white>blitz help install</> to see options');
+                return 1;
+            }
+
+            if (!$input->getOption('force')) {
+                $this->offerGitActions($io, $input, $output);
             }
             $start = \microtime(true);
             $parser = new ConfigParser;
+            try {
+                if ($cookbook) {
+                    $parser->parseCookbook($cookbook);
+                }
+                if ($recipes) {
+                    $parser->parseRecipes($recipes);
+                }
+            } catch (ParserException $e) {
+                $io->error($e->getMessage());
+                return 1;
+            }
             $actions = $parser->getActions();
             if ($actions->getMigrateCommand() && !$this->canMigrate()) {
                 $io->error('Unable to perform migrations. Please check the configuration.');
                 return 1;
             }
-            $io->writeln(\sprintf('<fg=white>Using %s</>', $parser->resolveConfigPath()));
-            $io->write($actions->listActions());
+            $table = new Table($output);
+            $rows = $actions->map(function (ActionInterface $action, $i) {
+                $step = $i + 1;
+                return [\sprintf('<fg=white;options=bold>%2d</>', $step), $action->getDescription()];
+            })->toArray();
+            $table->setHeaders([' #', 'Description'])
+                ->setRows($rows)
+                ->setStyle('box')
+                ->render();
             if (!$input->getOption('force') && !$io->confirm('Execute these action?')) {
                 return 0;
             }
@@ -112,6 +133,33 @@ class InitCommand extends Command
         return 0;
     }
 
+    private function offerGitActions(SymfonyStyle $io, InputInterface $input, OutputInterface $output)
+    {
+        $git = new Git();
+        if ($git->isExecutable()) {
+            if (!$git->isRepo() && $io->confirm('Initialize git repository?')) {
+                $git->init();
+            }
+            if ($git->isDirty() && $io->confirm('Add and commit changes?')) {
+                /** @var QuestionHelper $helper */
+                $helper = $this->getHelper('question');
+                $message = $helper->ask($input, $output, new Question("Write a commit message:\n", 'Initial commit'));
+                $git->add() && $git->commit($message);
+            }
+        }
+    }
+
+    private function canMigrate()
+    {
+        if ($this->shell([$this->getPhpExecutable(), '-n', 'artisan', 'migrate:status'])) {
+            return true;
+        }
+        if (\mb_stripos($this->process_output, 'migration table not found') !== false) {
+            return $this->shell([$this->getPhpExecutable(), '-n', 'artisan', 'migrate:install']);
+        }
+        return false;
+    }
+
     private function task(SymfonyStyle $io, string $title, \Closure $task = null, $loadingText = 'executing...')
     {
         $io->write("$title: <comment>{$loadingText}</comment>");
@@ -150,7 +198,7 @@ class InitCommand extends Command
     private function installMultiplePackages(\MortenScheel\LaravelBlitz\Actions\ActionCollection $actions, bool $dev = false)
     {
         $packages = $actions->map(function (ComposerInstall $action) {
-            return "{$action->package}={$action->version}";
+            return $action->getPackageWithVersion();
         })->toArray();
         $command = \array_merge(
             [
@@ -163,17 +211,6 @@ class InitCommand extends Command
             $packages,
             $dev ? ['--dev', '--no-update'] : []
         );
-        return $this->shell($command, true);
-    }
-
-    private function canMigrate()
-    {
-        if ($this->shell([$this->getPhpExecutable(), '-n', 'artisan', 'migrate:status'], true)) {
-            return true;
-        }
-        if (\mb_stripos($this->process_output, 'migration table not found') !== false) {
-            return $this->shell([$this->getPhpExecutable(), '-n', 'artisan', 'migrate:install'], true);
-        }
-        return false;
+        return $this->shell($command);
     }
 }

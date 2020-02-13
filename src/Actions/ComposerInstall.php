@@ -25,7 +25,7 @@ class ComposerInstall extends Action
     {
         parent::__construct();
         $this->package = $item['package'];
-        $this->version = array_get($item, 'version', '*');
+        $this->version = array_get($item, 'version');
         $this->dev = array_get($item, 'dev', false);
     }
 
@@ -48,8 +48,7 @@ class ComposerInstall extends Action
     public function execute(): bool
     {
         if ($this->isInstalled()) {
-            $this->error = "{$this->package} is already installed";
-            return false;
+            return true;
         }
         $package = $this->package;
         if ($this->version) {
@@ -81,6 +80,15 @@ class ComposerInstall extends Action
             'show',
             '--quiet',
             $this->package
-        ], true);
+        ]);
+    }
+
+    public function getPackageWithVersion()
+    {
+        $name = $this->package;
+        if ($this->version === null) {
+            return $name;
+        }
+        return "{$name}={$this->version}";
     }
 }

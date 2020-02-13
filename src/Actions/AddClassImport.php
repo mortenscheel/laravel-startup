@@ -2,16 +2,19 @@
 
 namespace MortenScheel\LaravelBlitz\Actions;
 
-class AddClassImport extends Action
+use MortenScheel\LaravelBlitz\Transformers\AddClassImportTransformer;
+use MortenScheel\LaravelBlitz\Transformers\Transformer;
+
+class AddClassImport extends FileTransformerAction
 {
     private $class;
     private $import;
 
     public function __construct(array $item)
     {
-        parent::__construct();
         $this->class = $item['class'];
         $this->import = $item['import'];
+        parent::__construct();
     }
 
     public function getDescription(): string
@@ -19,24 +22,14 @@ class AddClassImport extends Action
         return \sprintf('Add %s as class import in %s', $this->import, $this->class);
     }
 
-    public function execute(): bool
+    protected function getTransformer(string $original): ?Transformer
     {
-        $filename = $this->findClassFile($this->class);
-        $class_basename = $this->getClassBaseName($this->class);
-        $file = $this->filesystem->get($filename);
-        if (\mb_stripos($file, "use {$this->import}") !== false) {
-            return true;
-        }
-        $pattern = \sprintf("~(\nclass %s)~mu", $class_basename);
-        if (\preg_match($pattern, $file, $match, \PREG_OFFSET_CAPTURE)) {
-            $offset = $match[1][1];
-            $before = \mb_substr($file, 0, $offset);
-            $after = \mb_substr($file, $offset);
-            $file = \sprintf("%suse %s;\n%s", $before, $this->import, $after);
-            $this->filesystem->put($filename, $file);
-            return true;
-        }
-        return false;
+        $basename = $this->getClassBaseName($this->class);
+        return new AddClassImportTransformer($original, $basename, $this->import);
     }
 
+    protected function getFilePath(): string
+    {
+        return $this->findClassFile($this->class);
+    }
 }

@@ -2,7 +2,10 @@
 
 namespace MortenScheel\LaravelBlitz\Actions;
 
-class AppendPhpMethod extends Action
+use MortenScheel\LaravelBlitz\Transformers\AppendPhpMethodTransformer;
+use MortenScheel\LaravelBlitz\Transformers\Transformer;
+
+class AppendPhpMethod extends FileTransformerAction
 {
     private $class;
     private $method;
@@ -14,10 +17,10 @@ class AppendPhpMethod extends Action
      */
     public function __construct(array $item)
     {
-        parent::__construct();
         $this->class = $item['class'];
         $this->method = $item['method'];
         $this->append = $item['append'];
+        parent::__construct();
     }
 
     public function getDescription(): string
@@ -25,27 +28,17 @@ class AppendPhpMethod extends Action
         return \sprintf('Append %s to the %s method in %s', $this->append, $this->method, $this->class);
     }
 
-    public function execute(): bool
+    protected function getTransformer(string $original): ?Transformer
     {
-        $filename = $this->findClassFile($this->class);
-        $file = $this->filesystem->get($filename);
-        $method_capture = \sprintf(
-            "~\n[\t ]+(?:public|private|protected)? function %s *\([^{]+{([^}]+)\n[\t ]*}~mu",
-            $this->method
+        return new AppendPhpMethodTransformer(
+            $original,
+            $this->method,
+            $this->append
         );
-        if (\preg_match($method_capture, $file, $method_match, \PREG_OFFSET_CAPTURE)) {
-            [$body, $body_offset] = $method_match[1];
-            $indent = '';
-            if (\preg_match("~\n([\t ]+)\S~mu", $body, $indent_match, \PREG_OFFSET_CAPTURE)) {
-                $indent = $indent_match[1][0];
-            }
-            $offset = $body_offset + \mb_strlen($body);
-            $before = \mb_substr($file, 0, $offset);
-            $after = \mb_substr($file, $offset);
-            $file = \sprintf("%s\n%s%s%s", $before, $indent, $this->append, $after);
-            $this->filesystem->put($filename, $file);
-            return true;
-        }
-        return false;
+    }
+
+    protected function getFilePath(): string
+    {
+        return $this->findClassFile($this->class);
     }
 }

@@ -4,7 +4,11 @@
 namespace MortenScheel\LaravelBlitz\Actions;
 
 
-class CaptureReplace extends Action
+use MortenScheel\LaravelBlitz\Filesystem;
+use MortenScheel\LaravelBlitz\Transformers\CaptureReplaceTransformer;
+use MortenScheel\LaravelBlitz\Transformers\Transformer;
+
+class CaptureReplace extends FileTransformerAction
 {
     private $file;
     private $capture;
@@ -16,10 +20,10 @@ class CaptureReplace extends Action
      */
     public function __construct(array $item)
     {
-        parent::__construct();
         $this->file = $item['file'];
         $this->capture = $item['capture'];
         $this->replacement = $item['replacement'];
+        parent::__construct();
     }
 
 
@@ -28,21 +32,17 @@ class CaptureReplace extends Action
         return \sprintf('Replace %s with %s in %s', $this->capture, $this->replacement, $this->file);
     }
 
-    public function execute(): bool
+    protected function getTransformer(string $original): ?Transformer
     {
-        $file = $this->filesystem->get($this->file);
-        if (\preg_match($this->capture, $file, $match, \PREG_OFFSET_CAPTURE)) {
-            [$captured, $offset] = $match[1];
-            $file = \sprintf(
-                '%s%s%s',
-                \mb_substr($file, 0, $offset),
-                $this->replacement,
-                \mb_substr($file, $offset + \mb_strlen($captured))
-            );
-            $this->filesystem->put($this->file, $file);
-            return true;
-        }
-        $this->error = "{$this->capture} didn't capture anything";
-        return false;
+        return new CaptureReplaceTransformer(
+            $original,
+            $this->capture,
+            $this->replacement
+        );
+    }
+
+    protected function getFilePath(): string
+    {
+        return (new Filesystem)->getAbsolutePath($this->file);
     }
 }

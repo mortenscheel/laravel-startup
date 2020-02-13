@@ -12,7 +12,7 @@ class Git
 
     public function isExecutable()
     {
-        return $this->shell(['git', '--version'], true) === true;
+        return $this->shell(['git', '--version']) === true;
     }
 
     public function isRepo()
@@ -23,7 +23,7 @@ class Git
 
     public function isDirty()
     {
-        $this->shell(['git', 'status', '--short'], true);
+        $this->shell(['git', 'status', '--short']);
         return $this->process_output !== '';
     }
 

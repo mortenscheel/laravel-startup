@@ -3,19 +3,17 @@
 namespace MortenScheel\LaravelBlitz\Actions;
 
 use MortenScheel\LaravelBlitz\Concerns\ProcessRunner;
+use MortenScheel\LaravelBlitz\Concerns\ReportsErrors;
 use MortenScheel\LaravelBlitz\Filesystem;
 use MortenScheel\LaravelBlitz\Parser\ParserException;
 use Tightenco\Collect\Contracts\Support\Arrayable;
 
 abstract class Action implements ActionInterface, Arrayable
 {
-    use ProcessRunner;
+    use ProcessRunner, ReportsErrors;
 
     /** @var Filesystem */
     protected $filesystem;
-
-    /** @var string|null */
-    protected $error;
 
     public function __construct()
     {
@@ -38,14 +36,6 @@ abstract class Action implements ActionInterface, Arrayable
             throw new ParserException("Unknown Action: $action_name");
         }
         return new $class($settings);
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getError(): ?string
-    {
-        return $this->error;
     }
 
     public function toArray()
