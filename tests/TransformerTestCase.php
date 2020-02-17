@@ -40,9 +40,8 @@ abstract class TransformerTestCase extends TestCase
         foreach ($this->originals as $name => $original) {
             $expected = $this->expected[$name];
             $transformer = $this->getTestTransformer($original);
-            // Ignore Windows CRLF line endings
-            $actual = \str_replace("\r\n", "\n", $transformer->transform());
-            $this->assertEquals($actual, $expected, $name);
+            $actual = $transformer->transform();
+            $this->assertSameStrings($actual, $expected, $name);
         }
     }
 
@@ -65,5 +64,21 @@ abstract class TransformerTestCase extends TestCase
             $this->originals[\sprintf('%s: %s', $class_name, $case_folder->getRelativePathname())] = \file_get_contents($original_path);
             $this->expected[\sprintf('%s: %s', $class_name, $case_folder->getRelativePathname())] = \file_get_contents($expected_path);
         }
+    }
+
+    protected function assertSameStrings($expected, $actual, $message)
+    {
+        $message = [$message];
+
+        if (
+            $expected !== $actual
+            && \preg_replace('/(\r\n|\n\r|\r)/', "\n", $expected) === \preg_replace('/(\r\n|\n\r|\r)/', "\n", $actual)
+        ) {
+            $message[] = ' #Warning: Strings contain different line endings! Debug using remaping ["\r" => "R", "\n" => "N", "\t" => "T"]:';
+            $message[] = ' -' . \str_replace(["\r", "\n", "\t"], ['R', 'N', 'T'], $expected);
+            $message[] = ' +' . \str_replace(["\r", "\n", "\t"], ['R', 'N', 'T'], $actual);
+        }
+
+        $this->assertSame($expected, $actual, \implode("\n", $message));
     }
 }
