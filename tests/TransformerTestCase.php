@@ -41,7 +41,7 @@ abstract class TransformerTestCase extends TestCase
             $expected = $this->expected[$name];
             $transformer = $this->getTestTransformer($original);
             $actual = $transformer->transform();
-            $this->assertSameStrings($actual, $expected, $name);
+            $this->assertSame($actual, $expected, $name);
         }
     }
 
@@ -61,24 +61,16 @@ abstract class TransformerTestCase extends TestCase
             if (!\file_exists($original_path) || !\file_exists($expected_path)) {
                 throw new \RuntimeException('Testcase files missing');
             }
-            $this->originals[\sprintf('%s: %s', $class_name, $case_folder->getRelativePathname())] = \file_get_contents($original_path);
-            $this->expected[\sprintf('%s: %s', $class_name, $case_folder->getRelativePathname())] = \file_get_contents($expected_path);
+            $original = \file_get_contents($original_path);
+            $expected = \file_get_contents($expected_path);
+            $test_name = \sprintf('%s: %s', $class_name, $case_folder->getRelativePathname());
+            if (\mb_stripos(\PHP_OS, 'WIN') === 0) {
+                // Convert original line endings to \r\n to allow comparison
+                $original = \str_replace("\n", "\r\n", $original);
+                $expected = \str_replace("\n", "\r\n", $expected);
+            }
+            $this->originals[$test_name] = $original;
+            $this->expected[$test_name] = $expected;
         }
-    }
-
-    protected function assertSameStrings($expected, $actual, $message)
-    {
-        $message = [$message];
-
-        if (
-            $expected !== $actual
-            && \preg_replace('/(\r\n|\n\r|\r)/', "\n", $expected) === \preg_replace('/(\r\n|\n\r|\r)/', "\n", $actual)
-        ) {
-            $message[] = ' #Warning: Strings contain different line endings! Debug using remaping ["\r" => "R", "\n" => "N", "\t" => "T"]:';
-            $message[] = ' -' . \str_replace(["\r", "\n", "\t"], ['R', 'N', 'T'], $expected);
-            $message[] = ' +' . \str_replace(["\r", "\n", "\t"], ['R', 'N', 'T'], $actual);
-        }
-
-        $this->assertSame($expected, $actual, \implode("\n", $message));
     }
 }
