@@ -50,14 +50,14 @@ abstract class TransformerTestCase extends TestCase
         parent::setUp();
         $names = \explode('\\', \get_class($this));
         $class_name = \array_pop($names);
-        $folder = \sprintf('%s/Fixtures/%s', __DIR__, $class_name);
+        $folder = \realpath(\sprintf('%s/Fixtures/%s', __DIR__, $class_name));
         if (!\file_exists($folder)) {
             throw new \RuntimeException('Fixtures folder not found for ' . $class_name);
         }
         /** @var SplFileInfo $item */
         foreach (Finder::create()->in($folder)->directories() as $case_folder) {
-            $original_path = $case_folder->getPathname() . '/original.txt';
-            $expected_path = $case_folder->getPathname() . '/expected.txt';
+            $original_path = $case_folder->getPathname() . \DIRECTORY_SEPARATOR . 'original.txt';
+            $expected_path = $case_folder->getPathname() . \DIRECTORY_SEPARATOR . 'expected.txt';
             if (!\file_exists($original_path) || !\file_exists($expected_path)) {
                 throw new \RuntimeException('Testcase files missing');
             }
