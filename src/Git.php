@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller;
-
 
 use MortenScheel\PhpDependencyInstaller\Concerns\ProcessRunner;
 

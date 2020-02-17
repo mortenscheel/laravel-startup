@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller\Actions;
-
 
 use MortenScheel\PhpDependencyInstaller\Filesystem;
 use MortenScheel\PhpDependencyInstaller\Transformers\CaptureReplaceTransformer;
@@ -25,7 +23,6 @@ class CaptureReplace extends FileTransformerAction
         $this->replacement = $item['replacement'];
         parent::__construct();
     }
-
 
     public function getDescription(): string
     {

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller\Transformers;
-
 
 interface Transformer
 {

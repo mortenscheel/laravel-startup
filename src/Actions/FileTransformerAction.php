@@ -1,14 +1,11 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller\Actions;
-
 
 use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 
 abstract class FileTransformerAction extends Action
 {
-
     abstract protected function getTransformer(string $original): ?Transformer;
     abstract protected function getFilePath(): string;
 
