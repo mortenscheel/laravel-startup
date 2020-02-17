@@ -185,5 +185,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-.php_cs
 /.php_cs.cache
