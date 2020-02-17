@@ -1,10 +1,9 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Actions;
+namespace MortenScheel\PhpDependencyInstaller\Actions;
 
-use MortenScheel\LaravelBlitz\Filesystem;
-use MortenScheel\LaravelBlitz\Transformers\AppendPhpArrayTransformer;
-use MortenScheel\LaravelBlitz\Transformers\Transformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\AppendPhpArrayTransformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 
 class AppendPhpArray extends FileTransformerAction
 {

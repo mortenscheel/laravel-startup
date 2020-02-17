@@ -1,8 +1,8 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Commands;
+namespace MortenScheel\PhpDependencyInstaller\Commands;
 
-use MortenScheel\LaravelBlitz\Filesystem;
+use MortenScheel\PhpDependencyInstaller\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,7 +21,7 @@ class ConfigCommand extends Command
     {
         $this
             ->setName('config')
-            ->setDescription('Edit Blitz configuration')
+            ->setDescription('Edit PHP Dependency Installer configuration')
             ->addOption('show', 's', InputOption::VALUE_NONE, 'Show current configuration')
             ->addOption('copy', null, InputOption::VALUE_NONE, 'Copy global config to current directory')
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Debug')
@@ -48,7 +48,7 @@ class ConfigCommand extends Command
             $io->comment('Config file already exists');
             return 1;
         }
-        if (!$files->hasBlitzConfig()) {
+        if (!$files->hasGlobalConfig()) {
             $io->error('No config file found. Create one with the --create option.');
             return 1;
         }
@@ -61,7 +61,7 @@ class ConfigCommand extends Command
             return 0;
         }
         if ($input->getOption('copy')) {
-            $files->copy($files->getGlobalConfigFilePath(), \getcwd() . '/blitz.yml');
+            $files->copy($files->getGlobalConfigFilePath(), \getcwd() . '/pdi.yml');
             $io->success('Config file copied');
             return 0;
         }

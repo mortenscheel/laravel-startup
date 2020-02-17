@@ -1,10 +1,10 @@
 <?php
 
 
-namespace MortenScheel\LaravelBlitz\Transformers;
+namespace MortenScheel\PhpDependencyInstaller\Transformers;
 
 
-use MortenScheel\LaravelBlitz\Concerns\ReportsErrors;
+use MortenScheel\PhpDependencyInstaller\Concerns\ReportsErrors;
 
 class AddClassImportTransformer implements Transformer
 {

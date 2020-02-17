@@ -1,10 +1,10 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Parser;
+namespace MortenScheel\PhpDependencyInstaller\Parser;
 
-use MortenScheel\LaravelBlitz\Actions\Action;
-use MortenScheel\LaravelBlitz\Actions\ActionCollection;
-use MortenScheel\LaravelBlitz\Filesystem;
+use MortenScheel\PhpDependencyInstaller\Actions\Action;
+use MortenScheel\PhpDependencyInstaller\Actions\ActionCollection;
+use MortenScheel\PhpDependencyInstaller\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 use Tightenco\Collect\Support\Collection;
 

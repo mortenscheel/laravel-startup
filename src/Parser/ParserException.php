@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MortenScheel\LaravelBlitz\Parser;
+namespace MortenScheel\PhpDependencyInstaller\Parser;
 
 
 class ParserException extends \Exception

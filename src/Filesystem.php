@@ -1,6 +1,6 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz;
+namespace MortenScheel\PhpDependencyInstaller;
 
 class Filesystem extends \Symfony\Component\Filesystem\Filesystem
 {
@@ -14,19 +14,19 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem
         return \file_get_contents($this->getAbsolutePath($path));
     }
 
-    public function hasBlitzConfig()
+    public function hasGlobalConfig()
     {
         return $this->exists($this->getGlobalConfigFilePath());
     }
 
     private function getGlobalConfigFolder()
     {
-        return \sprintf('%s/.config/blitz', \getenv('HOME'));
+        return \sprintf('%s/.config/pdi', \getenv('HOME'));
     }
 
     public function getGlobalConfigFilePath()
     {
-        return \sprintf('%s/blitz.yml', $this->getGlobalConfigFolder());
+        return \sprintf('%s/pdi.yml', $this->getGlobalConfigFolder());
     }
 
     public function getConfig()
@@ -43,7 +43,7 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem
             $this->mkdir($this->getGlobalConfigFolder(), 0755);
         }
         if (!$this->exists($this->getGlobalConfigFilePath())) {
-            $this->copy(__DIR__ . '/../config/blitz.yml', $this->getGlobalConfigFilePath());
+            $this->copy(__DIR__ . '/../config/pdi.yml', $this->getGlobalConfigFilePath());
             return $this->getGlobalConfigFilePath();
         }
         return null;

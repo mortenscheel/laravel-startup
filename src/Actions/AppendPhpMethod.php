@@ -1,9 +1,9 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Actions;
+namespace MortenScheel\PhpDependencyInstaller\Actions;
 
-use MortenScheel\LaravelBlitz\Transformers\AppendPhpMethodTransformer;
-use MortenScheel\LaravelBlitz\Transformers\Transformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\AppendPhpMethodTransformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 
 class AppendPhpMethod extends FileTransformerAction
 {

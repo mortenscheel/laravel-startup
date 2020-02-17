@@ -1,10 +1,10 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Tests\Transformers;
+namespace MortenScheel\PhpDependencyInstaller\Tests\Transformers;
 
-use MortenScheel\LaravelBlitz\Tests\TransformerTestCase;
-use MortenScheel\LaravelBlitz\Transformers\AppendPhpMethodTransformer;
-use MortenScheel\LaravelBlitz\Transformers\Transformer;
+use MortenScheel\PhpDependencyInstaller\Tests\TransformerTestCase;
+use MortenScheel\PhpDependencyInstaller\Transformers\AppendPhpMethodTransformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 
 class AppendPhpMethodTransformerTest extends TransformerTestCase
 {

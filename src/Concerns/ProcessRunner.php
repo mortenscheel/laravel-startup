@@ -1,6 +1,6 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Concerns;
+namespace MortenScheel\PhpDependencyInstaller\Concerns;
 
 use Symfony\Component\Process\Process;
 

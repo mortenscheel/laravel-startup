@@ -1,9 +1,9 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Actions;
+namespace MortenScheel\PhpDependencyInstaller\Actions;
 
-use MortenScheel\LaravelBlitz\Transformers\AddClassImportTransformer;
-use MortenScheel\LaravelBlitz\Transformers\Transformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\AddClassImportTransformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 
 class AddClassImport extends FileTransformerAction
 {

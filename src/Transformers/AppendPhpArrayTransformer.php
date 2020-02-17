@@ -1,8 +1,8 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Transformers;
+namespace MortenScheel\PhpDependencyInstaller\Transformers;
 
-use MortenScheel\LaravelBlitz\Concerns\ReportsErrors;
+use MortenScheel\PhpDependencyInstaller\Concerns\ReportsErrors;
 
 class AppendPhpArrayTransformer implements Transformer
 {
@@ -29,8 +29,7 @@ class AppendPhpArrayTransformer implements Transformer
     public function __construct(string $original, string $variable, string $value)
     {
         $this->original = $original;
-        // Ensure dollar sign is escaped
-        $this->variable = \preg_replace("/(?<!\\\\)\\\$/", "\\\\\$$1", \trim($variable));
+        $this->variable = $variable;
         $this->value = $value;
     }
 
@@ -72,7 +71,7 @@ class AppendPhpArrayTransformer implements Transformer
      */
     private function captureVariableBody()
     {
-        $variable_capture_pattern = \sprintf('~%s\s*=\s*\[([^\]]*)]~mu', $this->variable);
+        $variable_capture_pattern = \sprintf('~%s\s*=\s*\[([^\]]*)]~mu', \preg_quote($this->variable, '~'));
         \preg_match($variable_capture_pattern, $this->original, $match, \PREG_OFFSET_CAPTURE);
         return $match;
     }

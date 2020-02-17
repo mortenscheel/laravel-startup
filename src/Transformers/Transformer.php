@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MortenScheel\LaravelBlitz\Transformers;
+namespace MortenScheel\PhpDependencyInstaller\Transformers;
 
 
 interface Transformer

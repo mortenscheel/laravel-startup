@@ -1,12 +1,12 @@
 <?php
 
 
-namespace MortenScheel\LaravelBlitz\Actions;
+namespace MortenScheel\PhpDependencyInstaller\Actions;
 
 
-use MortenScheel\LaravelBlitz\Filesystem;
-use MortenScheel\LaravelBlitz\Transformers\CaptureReplaceTransformer;
-use MortenScheel\LaravelBlitz\Transformers\Transformer;
+use MortenScheel\PhpDependencyInstaller\Filesystem;
+use MortenScheel\PhpDependencyInstaller\Transformers\CaptureReplaceTransformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 
 class CaptureReplace extends FileTransformerAction
 {

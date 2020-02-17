@@ -1,8 +1,8 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Transformers;
+namespace MortenScheel\PhpDependencyInstaller\Transformers;
 
-use MortenScheel\LaravelBlitz\Concerns\ReportsErrors;
+use MortenScheel\PhpDependencyInstaller\Concerns\ReportsErrors;
 
 class AppendPhpMethodTransformer implements Transformer
 {
@@ -67,8 +67,8 @@ class AppendPhpMethodTransformer implements Transformer
     public function isTransformationRequired(): bool
     {
         if ($method_match = $this->captureMethod()) {
-            $pattern = \sprintf('~%s$~', $this->append);
-            return !\preg_match($pattern, $method_match[1]);
+            $pattern = \sprintf('~%s$~u', \preg_quote($this->append, '~'));
+            return !\preg_match($pattern, $method_match[1][0]);
         }
         return true; // Duplicate code might be intentional
     }

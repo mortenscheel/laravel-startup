@@ -1,8 +1,8 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Transformers;
+namespace MortenScheel\PhpDependencyInstaller\Transformers;
 
-use MortenScheel\LaravelBlitz\Concerns\ReportsErrors;
+use MortenScheel\PhpDependencyInstaller\Concerns\ReportsErrors;
 
 class AddTraitTransformer implements Transformer
 {
@@ -68,7 +68,7 @@ class AddTraitTransformer implements Transformer
 
     public function isTransformationRequired(): bool
     {
-        $pattern = \sprintf('~^\s*use .*%s.*$~mu', $this->trait);
+        $pattern = \sprintf('~^\s*use .*%s.*$~mu', \preg_quote($this->trait, '~'));
         return !\preg_match($pattern, $this->original);
     }
 }

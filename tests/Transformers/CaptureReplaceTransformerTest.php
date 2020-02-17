@@ -1,10 +1,10 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Tests\Transformers;
+namespace MortenScheel\PhpDependencyInstaller\Tests\Transformers;
 
-use MortenScheel\LaravelBlitz\Tests\TransformerTestCase;
-use MortenScheel\LaravelBlitz\Transformers\CaptureReplaceTransformer;
-use MortenScheel\LaravelBlitz\Transformers\Transformer;
+use MortenScheel\PhpDependencyInstaller\Tests\TransformerTestCase;
+use MortenScheel\PhpDependencyInstaller\Transformers\CaptureReplaceTransformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 
 class CaptureReplaceTransformerTest extends TransformerTestCase
 {

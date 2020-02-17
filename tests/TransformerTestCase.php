@@ -1,8 +1,8 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Tests;
+namespace MortenScheel\PhpDependencyInstaller\Tests;
 
-use MortenScheel\LaravelBlitz\Transformers\Transformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;

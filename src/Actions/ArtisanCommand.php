@@ -1,6 +1,6 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Actions;
+namespace MortenScheel\PhpDependencyInstaller\Actions;
 
 class ArtisanCommand extends Action
 {

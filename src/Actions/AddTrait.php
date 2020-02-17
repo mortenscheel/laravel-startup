@@ -1,9 +1,9 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Actions;
+namespace MortenScheel\PhpDependencyInstaller\Actions;
 
-use MortenScheel\LaravelBlitz\Transformers\AddTraitTransformer;
-use MortenScheel\LaravelBlitz\Transformers\Transformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\AddTraitTransformer;
+use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 
 class AddTrait extends FileTransformerAction
 {

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace MortenScheel\LaravelBlitz;
+namespace MortenScheel\PhpDependencyInstaller;
 
 
-use MortenScheel\LaravelBlitz\Concerns\ProcessRunner;
+use MortenScheel\PhpDependencyInstaller\Concerns\ProcessRunner;
 
 class Git
 {

@@ -1,39 +1,47 @@
 {
-    "name": "mortenscheel/laravel-blitz",
-    "description": "Convenient tool to bootstrap a Laravel project with pre-configured packages",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Morten Scheel",
-            "email": "morten@mortenscheel.com"
-        }
-    ],
-    "homepage": "https://github.com/mortenscheel/laravel-blitz",
-    "keywords": ["Laravel", "Tools"],
-    "bin": [
-        "bin/blitz"
-    ],
-    "require": {
-        "symfony/console": "^4.0|^5.0",
-        "symfony/filesystem": "^4.0|^5.0",
-        "symfony/process": "^4.2|^5.0",
-        "symfony/yaml": "^4.4",
-        "symfony/var-dumper": "^5.0",
-        "tightenco/collect": "^6.14"
-    },
-    "autoload": {
-        "psr-4": {
-            "MortenScheel\\LaravelBlitz\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "MortenScheel\\LaravelBlitz\\Tests\\": "tests"
-        }
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.16",
-        "barryvdh/laravel-ide-helper": "^2.6",
-        "phpunit/phpunit": "^9.0"
+  "name": "mortenscheel/php-dependency-installer",
+  "description": "Automate dependency installation and setup with reusable recipes",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Morten Scheel",
+      "email": "morten@mortenscheel.com"
     }
+  ],
+  "homepage": "https://github.com/mortenscheel/php-dependency-installer",
+  "keywords": [
+    "PHP",
+    "Dependency",
+    "Installer",
+    "Automation",
+    "Developer-tools",
+    "Laravel",
+    "Tools"
+  ],
+  "bin": [
+    "bin/pdi"
+  ],
+  "require": {
+    "symfony/console": "^4.0|^5.0",
+    "symfony/filesystem": "^4.0|^5.0",
+    "symfony/process": "^4.2|^5.0",
+    "symfony/yaml": "^4.4",
+    "symfony/var-dumper": "^5.0",
+    "tightenco/collect": "^6.14"
+  },
+  "autoload": {
+    "psr-4": {
+      "MortenScheel\\PhpDependencyInstaller\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MortenScheel\\PhpDependencyInstaller\\Tests\\": "tests"
+    }
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "barryvdh/laravel-ide-helper": "^2.6",
+    "phpunit/phpunit": "^9.0"
+  }
 }

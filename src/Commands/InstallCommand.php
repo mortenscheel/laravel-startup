@@ -1,13 +1,13 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Commands;
+namespace MortenScheel\PhpDependencyInstaller\Commands;
 
-use MortenScheel\LaravelBlitz\Actions\ActionInterface;
-use MortenScheel\LaravelBlitz\Actions\ComposerInstall;
-use MortenScheel\LaravelBlitz\Concerns\ProcessRunner;
-use MortenScheel\LaravelBlitz\Git;
-use MortenScheel\LaravelBlitz\Parser\ConfigParser;
-use MortenScheel\LaravelBlitz\Parser\ParserException;
+use MortenScheel\PhpDependencyInstaller\Actions\ActionInterface;
+use MortenScheel\PhpDependencyInstaller\Actions\ComposerInstall;
+use MortenScheel\PhpDependencyInstaller\Concerns\ProcessRunner;
+use MortenScheel\PhpDependencyInstaller\Git;
+use MortenScheel\PhpDependencyInstaller\Parser\ConfigParser;
+use MortenScheel\PhpDependencyInstaller\Parser\ParserException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\Table;
@@ -33,7 +33,7 @@ class InstallCommand extends Command
             ->addArgument('recipes', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Recipes to install, comma separated')
             ->addOption('cookbook', null, InputOption::VALUE_OPTIONAL, 'Install recipes from a cookbook')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Install without asking for confirmation.')
-            ->setDescription('Install blitz recipes');
+            ->setDescription('Install pdi recipes');
     }
 
     /**
@@ -51,7 +51,7 @@ class InstallCommand extends Command
             $cookbook = $input->getOption('cookbook');
             if (empty($recipes) && $cookbook === null) {
                 $io->text('Please provide recipes or a cookbook path');
-                $io->text('Use <fg=white>blitz help install</> to see options');
+                $io->text('Use <fg=white>pdi help install</> to see options');
                 return 1;
             }
 
@@ -126,7 +126,7 @@ class InstallCommand extends Command
                 }
             }
             $seconds = \microtime(true) - $start;
-            $io->writeln(\sprintf('Blitz completed in %.2f seconds', $seconds));
+            $io->writeln(\sprintf('PDI completed in %.2f seconds', $seconds));
         } catch (\Exception $e) {
             return 1;
         }
@@ -191,11 +191,11 @@ class InstallCommand extends Command
     }
 
     /**
-     * @param \MortenScheel\LaravelBlitz\Actions\ActionCollection $actions
+     * @param \MortenScheel\PhpDependencyInstaller\Actions\ActionCollection $actions
      * @param bool $dev
      * @return bool
      */
-    private function installMultiplePackages(\MortenScheel\LaravelBlitz\Actions\ActionCollection $actions, bool $dev = false)
+    private function installMultiplePackages(\MortenScheel\PhpDependencyInstaller\Actions\ActionCollection $actions, bool $dev = false)
     {
         $packages = $actions->map(function (ComposerInstall $action) {
             return $action->getPackageWithVersion();

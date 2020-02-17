@@ -1,11 +1,11 @@
 <?php
 
-namespace MortenScheel\LaravelBlitz\Actions;
+namespace MortenScheel\PhpDependencyInstaller\Actions;
 
-use MortenScheel\LaravelBlitz\Concerns\ProcessRunner;
-use MortenScheel\LaravelBlitz\Concerns\ReportsErrors;
-use MortenScheel\LaravelBlitz\Filesystem;
-use MortenScheel\LaravelBlitz\Parser\ParserException;
+use MortenScheel\PhpDependencyInstaller\Concerns\ProcessRunner;
+use MortenScheel\PhpDependencyInstaller\Concerns\ReportsErrors;
+use MortenScheel\PhpDependencyInstaller\Filesystem;
+use MortenScheel\PhpDependencyInstaller\Parser\ParserException;
 use Tightenco\Collect\Contracts\Support\Arrayable;
 
 abstract class Action implements ActionInterface, Arrayable
@@ -31,7 +31,7 @@ abstract class Action implements ActionInterface, Arrayable
         if (!$action_name) {
             throw new ParserException('Expected item to have action');
         }
-        $class = "MortenScheel\LaravelBlitz\Actions\\$action_name";
+        $class = "MortenScheel\PhpDependencyInstaller\Actions\\$action_name";
         if (!\class_exists($class)) {
             throw new ParserException("Unknown Action: $action_name");
         }

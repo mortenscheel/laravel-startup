@@ -1,12 +1,12 @@
 #!/usr/bin/env php
 <?php
 
-use MortenScheel\LaravelBlitz\Commands\ConfigCommand;
-use MortenScheel\LaravelBlitz\Commands\InstallCommand;
+use MortenScheel\PhpDependencyInstaller\Commands\ConfigCommand;
+use MortenScheel\PhpDependencyInstaller\Commands\InstallCommand;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$app = new Symfony\Component\Console\Application('Laravel Blitz', '0.1');
+$app = new Symfony\Component\Console\Application('PHP Dependency Installer', '1.0-beta');
 $app->add(new InstallCommand());
 $app->add(new ConfigCommand());
 /** @noinspection PhpUnhandledExceptionInspection */

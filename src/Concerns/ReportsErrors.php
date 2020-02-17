@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MortenScheel\LaravelBlitz\Concerns;
+namespace MortenScheel\PhpDependencyInstaller\Concerns;
 
 
 trait ReportsErrors
