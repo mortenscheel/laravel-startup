@@ -52,12 +52,14 @@ class AddTraitTransformer implements Transformer
         }
         if (\preg_match($get_indent_pattern, $this->original, $match, \PREG_OFFSET_CAPTURE)) {
             [$indent, $offset] = $match[1];
+            $before = \mb_substr($this->original, 0, $offset);
+            $after = \mb_substr($this->original, $offset);
             return \sprintf(
                 "%s%suse %s;\n\n%s",
-                \mb_substr($this->original, 0, $offset),
+                $before,
                 $indent,
                 $this->trait,
-                \mb_substr($this->original, $offset)
+                $after
             );
         }
         $this->error = 'Failed to add trait';
@@ -66,7 +68,7 @@ class AddTraitTransformer implements Transformer
 
     public function isTransformationRequired(): bool
     {
-        $pattern = \sprintf('~^\s*use .*%s.*$~', $this->trait);
+        $pattern = \sprintf('~^\s*use .*%s.*$~mu', $this->trait);
         return !\preg_match($pattern, $this->original);
     }
 }

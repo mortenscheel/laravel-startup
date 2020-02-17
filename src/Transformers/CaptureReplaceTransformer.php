@@ -35,10 +35,17 @@ class CaptureReplaceTransformer implements Transformer
         $this->replacement = $replacement;
     }
 
-    public function transform(): ?string
+    private function performCapture()
     {
         if (\preg_match($this->capture, $this->original, $match, \PREG_OFFSET_CAPTURE)) {
-            [$captured, $offset] = $match[1];
+            return $match[1];
+        }
+    }
+
+    public function transform(): ?string
+    {
+        if ($capture_match = $this->performCapture()) {
+            [$captured, $offset] = $capture_match;
             return \sprintf(
                 '%s%s%s',
                 \mb_substr($this->original, 0, $offset),
@@ -52,6 +59,9 @@ class CaptureReplaceTransformer implements Transformer
 
     public function isTransformationRequired(): bool
     {
+        if ($capture_match = $this->performCapture()) {
+            return $capture_match[0] !== $this->replacement;
+        }
         return true; // Should be safe to transform multiple times
     }
 }

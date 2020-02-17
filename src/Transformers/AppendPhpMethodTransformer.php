@@ -35,11 +35,7 @@ class AppendPhpMethodTransformer implements Transformer
 
     public function transform(): ?string
     {
-        $method_capture = \sprintf(
-            "~\n[\t ]+(?:public|private|protected)? function %s *\([^{]+{([^}]+)\n[\t ]*}~mu",
-            $this->method
-        );
-        if (\preg_match($method_capture, $this->original, $method_match, \PREG_OFFSET_CAPTURE)) {
+        if ($method_match = $this->captureMethod()) {
             [$body, $body_offset] = $method_match[1];
             $indent = '';
             if (\preg_match("~\n([\t ]+)\S~mu", $body, $indent_match, \PREG_OFFSET_CAPTURE)) {
@@ -57,8 +53,23 @@ class AppendPhpMethodTransformer implements Transformer
         return null;
     }
 
+    private function captureMethod()
+    {
+        $method_capture = \sprintf(
+            "~\n[\t ]+(?:public|private|protected)? function %s *\([^{]+{([^}]+)\n[\t ]*}~mu",
+            $this->method
+        );
+        if (\preg_match($method_capture, $this->original, $method_match, \PREG_OFFSET_CAPTURE)) {
+            return $method_match;
+        }
+    }
+
     public function isTransformationRequired(): bool
     {
+        if ($method_match = $this->captureMethod()) {
+            $pattern = \sprintf('~%s$~', $this->append);
+            return !\preg_match($pattern, $method_match[1]);
+        }
         return true; // Duplicate code might be intentional
     }
 }

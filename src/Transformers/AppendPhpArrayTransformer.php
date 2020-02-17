@@ -39,16 +39,28 @@ class AppendPhpArrayTransformer implements Transformer
         if ($variable_capture_match = $this->captureVariableBody()) {
             [$array_content, $array_offset] = $variable_capture_match[1];
             // Capture final line and indentation
-            if (\preg_match('~\n( *)(\S+)\s+$~u', $array_content, $final_line_match, \PREG_OFFSET_CAPTURE)) {
+            if (\preg_match('~\n( *)(\S+)?\s+$~u', $array_content, $final_line_match, \PREG_OFFSET_CAPTURE)) {
                 $indent = $final_line_match[1][0];
-                [$final_line, $final_line_offset] = $final_line_match[2];
+                if (isset($final_line_match[2])) {
+                    [$final_line, $final_line_offset] = $final_line_match[2];
+                } else {
+                    $final_line = '';
+                    $final_line_offset = 0;
+                }
                 $offset = $array_offset + $final_line_offset + \mb_strlen($final_line);
                 $before = \mb_substr($this->original, 0, $offset);
-                if (!\preg_match('~,\s*$~', $before)) {
+                if ($final_line !== '' && !\preg_match('~,\s*$~', $before)) {
                     $before .= ',';
                 }
                 $after = \mb_substr($this->original, $offset);
                 return \sprintf("%s\n%s%s,%s", $before, $indent, $this->value, $after);
+            }
+            if (!\preg_match('~\\n~', $array_content)) {
+                // Single line array
+                $offset = $array_offset + \mb_strlen($array_content);
+                $before = \mb_substr($this->original, 0, $offset);
+                $after = \mb_substr($this->original, $offset);
+                return \sprintf('%s, %s%s', $before, $this->value, $after);
             }
         }
         $this->error = "{$this->variable} not found";
@@ -60,7 +72,7 @@ class AppendPhpArrayTransformer implements Transformer
      */
     private function captureVariableBody()
     {
-        $variable_capture_pattern = \sprintf('~%s\s*=\s*\[([^\]]+)]~mu', $this->variable);
+        $variable_capture_pattern = \sprintf('~%s\s*=\s*\[([^\]]*)]~mu', $this->variable);
         \preg_match($variable_capture_pattern, $this->original, $match, \PREG_OFFSET_CAPTURE);
         return $match;
     }
@@ -68,7 +80,7 @@ class AppendPhpArrayTransformer implements Transformer
     public function isTransformationRequired(): bool
     {
         if ($variable_capture_match = $this->captureVariableBody()) {
-            return \mb_stripos($variable_capture_match[1][0], $this->value) !== false;
+            return \mb_stripos($variable_capture_match[1][0], $this->value) === false;
         }
         return true;
     }
