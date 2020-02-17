@@ -1,6 +1,5 @@
 # PHP Dependency Installer
-![Build](https://github.com/mortenscheel/php-dependency-installer/workflows/PHP/badge.svg?branch=develop)
-[![Latest Version on Packagist][ico-version]][link-packagist]
+![Build](https://github.com/mortenscheel/php-dependency-installer/workflows/Build/badge.svg?branch=develop)[![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
 
 This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
