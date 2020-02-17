@@ -40,7 +40,8 @@ abstract class TransformerTestCase extends TestCase
         foreach ($this->originals as $name => $original) {
             $expected = $this->expected[$name];
             $transformer = $this->getTestTransformer($original);
-            $actual = $transformer->transform();
+            // Ignore Windows CRLF line endings
+            $actual = \str_replace("\r\n", "\n", $transformer->transform());
             $this->assertEquals($actual, $expected, $name);
         }
     }
