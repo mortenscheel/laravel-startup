@@ -2,11 +2,11 @@
 
 namespace MortenScheel\PhpDependencyInstaller;
 
-use MortenScheel\PhpDependencyInstaller\Concerns\ProcessRunner;
+use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
 
 class Git
 {
-    use ProcessRunner;
+    use RunsShellCommands;
 
     public function isExecutable()
     {

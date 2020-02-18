@@ -49,7 +49,7 @@ class ArtisanCommand extends Action
             $this->error = 'Current folder is not a Laravel project';
             return false;
         }
-        $command = [$this->getPhpExecutable(), '-n', 'artisan', $this->command];
+        $command = [$this->getExecutable('php'), '-n', 'artisan', $this->command];
         $arguments = $this->parseArtisanArguments($this->arguments);
         if (!$this->shell(\array_merge($command, $arguments))) {
             $this->error = 'Artisan command failed';

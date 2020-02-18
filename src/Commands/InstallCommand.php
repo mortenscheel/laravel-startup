@@ -4,7 +4,7 @@ namespace MortenScheel\PhpDependencyInstaller\Commands;
 
 use MortenScheel\PhpDependencyInstaller\Actions\ActionInterface;
 use MortenScheel\PhpDependencyInstaller\Actions\ComposerInstall;
-use MortenScheel\PhpDependencyInstaller\Concerns\ProcessRunner;
+use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
 use MortenScheel\PhpDependencyInstaller\Git;
 use MortenScheel\PhpDependencyInstaller\Parser\ConfigParser;
 use MortenScheel\PhpDependencyInstaller\Parser\ParserException;
@@ -20,7 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class InstallCommand extends Command
 {
-    use ProcessRunner;
+    use RunsShellCommands;
 
     /**
      * Configure the command options.
@@ -151,11 +151,11 @@ class InstallCommand extends Command
 
     private function canMigrate()
     {
-        if ($this->shell([$this->getPhpExecutable(), '-n', 'artisan', 'migrate:status'])) {
+        if ($this->shell([$this->getExecutable('php'), '-n', 'artisan', 'migrate:status'])) {
             return true;
         }
         if (\mb_stripos($this->process_output, 'migration table not found') !== false) {
-            return $this->shell([$this->getPhpExecutable(), '-n', 'artisan', 'migrate:install']);
+            return $this->shell([$this->getExecutable('php'), '-n', 'artisan', 'migrate:install']);
         }
         return false;
     }
@@ -202,9 +202,9 @@ class InstallCommand extends Command
         })->toArray();
         $command = \array_merge(
             [
-                $this->getPhpExecutable(),
+                $this->getExecutable('php'),
                 '-n',
-                $this->getComposerExecutable(),
+                $this->getExecutable('composer'),
                 'require',
                 '--no-interaction'
             ],

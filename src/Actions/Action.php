@@ -2,7 +2,7 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Actions;
 
-use MortenScheel\PhpDependencyInstaller\Concerns\ProcessRunner;
+use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
 use MortenScheel\PhpDependencyInstaller\Concerns\ReportsErrors;
 use MortenScheel\PhpDependencyInstaller\Filesystem;
 use MortenScheel\PhpDependencyInstaller\Parser\ParserException;
@@ -10,7 +10,7 @@ use Tightenco\Collect\Contracts\Support\Arrayable;
 
 abstract class Action implements ActionInterface, Arrayable
 {
-    use ProcessRunner, ReportsErrors;
+    use RunsShellCommands, ReportsErrors;
 
     /** @var Filesystem */
     protected $filesystem;

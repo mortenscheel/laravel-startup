@@ -55,9 +55,9 @@ class ComposerInstall extends Action
             $package .= "={$this->version}";
         }
         $command = [
-            $this->getPhpExecutable(),
+            $this->getExecutable('php'),
             '-n',
-            $this->getComposerExecutable(),
+            $this->getExecutable('composer'),
             'require',
             '--no-interaction',
             $package];
@@ -74,9 +74,9 @@ class ComposerInstall extends Action
     public function isInstalled(): bool
     {
         return $this->shell([
-            $this->getPhpExecutable(),
+            $this->getExecutable('php'),
             '-n',
-            $this->getComposerExecutable(),
+            $this->getExecutable('composer'),
             'show',
             '--quiet',
             $this->package

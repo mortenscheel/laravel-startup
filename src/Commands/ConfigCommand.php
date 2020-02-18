@@ -2,6 +2,7 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Commands;
 
+use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
 use MortenScheel\PhpDependencyInstaller\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,6 +13,7 @@ use Symfony\Component\Process\Process;
 
 class ConfigCommand extends Command
 {
+    use RunsShellCommands;
     /**
      * Configure the command options.
      *
@@ -70,5 +72,8 @@ class ConfigCommand extends Command
 
     private function debug(SymfonyStyle $io, Filesystem $files, InputInterface $input, OutputInterface $output)
     {
+        $output->write('Getting php executable...');
+        \sleep(2);
+        $output->write($this->getExecutable('php'));
     }
 }

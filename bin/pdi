@@ -2,6 +2,7 @@
 <?php
 
 use MortenScheel\PhpDependencyInstaller\Commands\ConfigCommand;
+use MortenScheel\PhpDependencyInstaller\Commands\DebugCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\InstallCommand;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -9,6 +10,8 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = new Symfony\Component\Console\Application('PHP Dependency Installer', '1.0-beta');
 $app->add(new InstallCommand());
 $app->add(new ConfigCommand());
+$app->add(new DebugCommand());
+
 /** @noinspection PhpUnhandledExceptionInspection */
 $app->run();
 
