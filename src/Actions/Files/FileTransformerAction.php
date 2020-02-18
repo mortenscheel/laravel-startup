@@ -1,7 +1,8 @@
 <?php
 
-namespace MortenScheel\PhpDependencyInstaller\Actions;
+namespace MortenScheel\PhpDependencyInstaller\Actions\Files;
 
+use MortenScheel\PhpDependencyInstaller\Actions\Action;
 use MortenScheel\PhpDependencyInstaller\Transformers\Transformer;
 
 abstract class FileTransformerAction extends Action

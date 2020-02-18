@@ -1,6 +1,6 @@
 <?php
 
-namespace MortenScheel\PhpDependencyInstaller\Actions;
+namespace MortenScheel\PhpDependencyInstaller\Actions\Files;
 
 use MortenScheel\PhpDependencyInstaller\Filesystem;
 use MortenScheel\PhpDependencyInstaller\Transformers\CaptureReplaceTransformer;

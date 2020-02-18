@@ -21,7 +21,11 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem
 
     private function getGlobalConfigFolder()
     {
-        return \sprintf('%s/.config/pdi', \getenv('HOME'));
+        $os = \mb_strtolower(\PHP_OS);
+        if (\mb_strpos($os, 'win') !== false) {
+            return '%APPDATA%/PhpDependencyInstaller';
+        }
+        return '$HOME/.config/PhpDependencyInstaller';
     }
 
     public function getGlobalConfigFilePath()

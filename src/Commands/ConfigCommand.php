@@ -21,7 +21,7 @@ class ConfigCommand extends Command
     {
         $this
             ->setName('config')
-            ->setDescription('Edit PHP Dependency Installer configuration')
+            ->setDescription('Customize PHP Dependency Installer configuration')
             ->addOption('show', 's', InputOption::VALUE_NONE, 'Show current configuration')
             ->addOption('copy', null, InputOption::VALUE_NONE, 'Copy global config to current directory')
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Debug')
