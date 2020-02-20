@@ -63,7 +63,7 @@ class ConfigCommand extends Command
             return 0;
         }
         if ($input->getOption('copy')) {
-            $files->copy($files->getGlobalConfigFilePath(), \getcwd() . '/pdi.yml');
+            $files->copy($files->getGlobalConfigFilePath(), \getcwd() . '/preset-template.yml');
             $io->success('Config file copied');
             return 0;
         }

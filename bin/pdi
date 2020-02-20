@@ -1,16 +1,22 @@
 #!/usr/bin/env php
 <?php
 
+use Dotenv\Dotenv;
 use MortenScheel\PhpDependencyInstaller\Commands\ConfigCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\DebugCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\InstallCommand;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
+
 $app = new Symfony\Component\Console\Application('PHP Dependency Installer', '1.0-beta');
 $app->add(new InstallCommand());
 $app->add(new ConfigCommand());
-$app->add(new DebugCommand());
+if (\getenv('DEBUG')) {
+    $app->add(new DebugCommand());
+}
+$app->setDefaultCommand('install');
 
 /** @noinspection PhpUnhandledExceptionInspection */
 $app->run();

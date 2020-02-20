@@ -1,0 +1,10 @@
+# List predefined recipes to install
+#- recipe: ide-helper
+#- recipe: cors
+#- recipe: passport
+#- recipe: telescope
+
+# Optionally add custom recipes
+- action: CopyFile
+  source: "~/Code/.php_cs.default"
+  destination: ".php_cs"

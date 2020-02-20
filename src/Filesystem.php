@@ -30,7 +30,7 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem
 
     public function getGlobalConfigFilePath()
     {
-        return \sprintf('%s/pdi.yml', $this->getGlobalConfigFolder());
+        return \sprintf('%s/preset-template.yml', $this->getGlobalConfigFolder());
     }
 
     public function getConfig()
@@ -47,7 +47,7 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem
             $this->mkdir($this->getGlobalConfigFolder(), 0755);
         }
         if (!$this->exists($this->getGlobalConfigFilePath())) {
-            $this->copy(__DIR__ . '/../config/pdi.yml', $this->getGlobalConfigFilePath());
+            $this->copy(__DIR__ . '/../config/preset-template.yml', $this->getGlobalConfigFilePath());
             return $this->getGlobalConfigFilePath();
         }
         return null;

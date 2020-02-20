@@ -4,6 +4,7 @@ namespace MortenScheel\PhpDependencyInstaller\Commands;
 
 use MortenScheel\PhpDependencyInstaller\Actions\ActionInterface;
 use MortenScheel\PhpDependencyInstaller\Actions\ComposerInstall;
+use MortenScheel\PhpDependencyInstaller\Menu;
 use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
 use MortenScheel\PhpDependencyInstaller\Git;
 use MortenScheel\PhpDependencyInstaller\Parser\ConfigParser;
@@ -50,9 +51,10 @@ class InstallCommand extends Command
             $recipes = $input->getArgument('recipes');
             $cookbook = $input->getOption('cookbook');
             if (empty($recipes) && $cookbook === null) {
-                $io->text('Please provide recipes or a cookbook path');
-                $io->text('Use <fg=white>pdi help install</> to see options');
-                return 1;
+                $menu = new Menu();
+                $result = $menu->open();
+                dump($result);
+                return 0;
             }
 
             if (!$input->getOption('force')) {
