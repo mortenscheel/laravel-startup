@@ -2,14 +2,12 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Commands;
 
-use MortenScheel\PhpDependencyInstaller\Actions\ActionInterface;
-use MortenScheel\PhpDependencyInstaller\Actions\ComposerInstall;
-use MortenScheel\PhpDependencyInstaller\Menu;
-use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
+use MortenScheel\PhpDependencyInstaller\Actions\Action;
+use MortenScheel\PhpDependencyInstaller\Actions\ComposerRequire;
 use MortenScheel\PhpDependencyInstaller\Git;
-use MortenScheel\PhpDependencyInstaller\Parser\ConfigParser;
+use MortenScheel\PhpDependencyInstaller\Menu;
+use MortenScheel\PhpDependencyInstaller\Parser\PresetParser;
 use MortenScheel\PhpDependencyInstaller\Parser\ParserException;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,10 +17,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class InstallCommand extends Command
+class InstallCommand extends BaseCommand
 {
-    use RunsShellCommands;
-
     /**
      * Configure the command options.
      *
@@ -32,7 +28,8 @@ class InstallCommand extends Command
     {
         $this->setName('install')
             ->addArgument('recipes', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Recipes to install, comma separated')
-            ->addOption('cookbook', null, InputOption::VALUE_OPTIONAL, 'Install recipes from a cookbook')
+            ->addOption('preset', 'p', InputOption::VALUE_OPTIONAL, 'Install recipes from a preset')
+            ->addOption('sequential', 's', InputOption::VALUE_NONE, 'Do not optimize the order of actions')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Install without asking for confirmation.')
             ->setDescription('Install pdi recipes');
     }
@@ -56,30 +53,28 @@ class InstallCommand extends Command
                 dump($result);
                 return 0;
             }
-
             if (!$input->getOption('force')) {
                 $this->offerGitActions($io, $input, $output);
             }
+            $sequential = $input->getOption('sequential');
             $start = \microtime(true);
-            $parser = new ConfigParser;
+            $parser = new PresetParser;
             try {
                 if ($cookbook) {
-                    $parser->parseCookbook($cookbook);
-                }
-                if ($recipes) {
-                    $parser->parseRecipes($recipes);
+                    $actions = $parser->parseCookbook($cookbook, $sequential);
+                } else {
+                    $actions = $parser->parseRecipes($recipes, $sequential);
                 }
             } catch (ParserException $e) {
                 $io->error($e->getMessage());
                 return 1;
             }
-            $actions = $parser->getActions();
             if ($actions->getMigrateCommand() && !$this->canMigrate()) {
                 $io->error('Unable to perform migrations. Please check the configuration.');
                 return 1;
             }
             $table = new Table($output);
-            $rows = $actions->map(function (ActionInterface $action, $i) {
+            $rows = $actions->map(function (Action $action, $i) {
                 $step = $i + 1;
                 return [\sprintf('<fg=white;options=bold>%2d</>', $step), $action->getDescription()];
             })->toArray();
@@ -199,7 +194,7 @@ class InstallCommand extends Command
      */
     private function installMultiplePackages(\MortenScheel\PhpDependencyInstaller\Actions\ActionCollection $actions, bool $dev = false)
     {
-        $packages = $actions->map(function (ComposerInstall $action) {
+        $packages = $actions->map(function (ComposerRequire $action) {
             return $action->getPackageWithVersion();
         })->toArray();
         $command = \array_merge(

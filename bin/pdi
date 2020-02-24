@@ -2,19 +2,28 @@
 <?php
 
 use Dotenv\Dotenv;
-use MortenScheel\PhpDependencyInstaller\Commands\ConfigCommand;
+use MortenScheel\PhpDependencyInstaller\Commands\ShowCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\DebugCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\InstallCommand;
+use MortenScheel\PhpDependencyInstaller\Filesystem;
 
 require __DIR__ . '/../vendor/autoload.php';
+
+if (!\defined('JSON_HUMAN_READABLE')) {
+    \define('JSON_HUMAN_READABLE', \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE);
+}
+if (!\defined('PDI_ROOT')) {
+    \define('PDI_ROOT', \dirname(__DIR__));
+}
 
 Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
 
 $app = new Symfony\Component\Console\Application('PHP Dependency Installer', '1.0-beta');
-$app->add(new InstallCommand());
-$app->add(new ConfigCommand());
+$filesystem = new Filesystem();
+$app->add(new InstallCommand($filesystem));
+$app->add(new ShowCommand($filesystem));
 if (\getenv('DEBUG')) {
-    $app->add(new DebugCommand());
+    $app->add(new DebugCommand($filesystem));
 }
 $app->setDefaultCommand('install');
 
@@ -26,4 +35,23 @@ function array_get(array $array, $key, $default = null)
     return \array_key_exists($key, $array) ?
         $array[$key] :
         $default;
+}
+
+/**
+ * @param Closure $callback
+ * @param int $count
+ * @return array
+ */
+function debug_timer(Closure $callback, int $count = 10)
+{
+    $times = [];
+    for ($i = 0; $i < $count; $i++) {
+        $start = \microtime(true);
+        $callback();
+        $times[] = \round(\microtime(true) - $start, 3);
+    }
+    $avg = array_sum($times) / $count;
+    $min = min($times);
+    $max = max($times);
+    return compact('avg', 'min', 'max', 'times');
 }

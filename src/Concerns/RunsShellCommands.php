@@ -11,7 +11,7 @@ trait RunsShellCommands
     /** @var string */
     protected $process_output = '';
 
-    protected $executables = [];
+    protected static $executables = [];
 
     /**
      * @param array $command
@@ -20,7 +20,7 @@ trait RunsShellCommands
     protected function shell(array $command): bool
     {
         $this->process_output = '';
-        $process = $this->createProcess($command);
+        $process = self::createProcess($command);
         $process->start();
         foreach ($process as $type => $buffer) {
             $this->process_output .= \rtrim($buffer, "\n") . "\n";
@@ -28,32 +28,41 @@ trait RunsShellCommands
         return $process->getExitCode() === 0;
     }
 
-    protected function createProcess(array $command): Process
+    protected static function createProcess(array $command): Process
     {
         return new Process($command, \getcwd(), null, null);
     }
 
-    protected function getShellOutput(array $command): ?string
+    protected static function createComposerCommand(array $command)
     {
-        $process = $this->createProcess($command);
+        return array_merge([
+            self::getExecutable('php'),
+            '-n',
+            self::getExecutable('composer')
+        ], $command);
+    }
+
+    protected static function getShellOutput(array $command): ?string
+    {
+        $process = self::createProcess($command);
         if ($process->run() === 0) {
-            return $process->getOutput();
+            return rtrim($process->getOutput());
         }
         return null;
     }
 
-    protected function getExecutable(string $executable): ?string
+    protected static function getExecutable(string $executable): ?string
     {
-        if (!\array_key_exists($executable, $this->executables)) {
-            if ($this->getOperatingSystem() === 'Windows') {
+        if (!\array_key_exists($executable, self::$executables)) {
+            if (self::getOperatingSystem() === 'Windows') {
                 $command = ['where'];
             } else {
                 $command = ['command', '-v'];
             }
             $command[] = $executable;
-            $path = \rtrim($this->getShellOutput($command));
-            $this->executables[$executable] = $path;
+            $path = \rtrim(self::getShellOutput($command));
+            self::$executables[$executable] = $path;
         }
-        return $this->executables[$executable];
+        return self::$executables[$executable];
     }
 }

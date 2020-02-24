@@ -4,7 +4,7 @@ namespace MortenScheel\PhpDependencyInstaller\Concerns;
 
 trait DetectsOperatingSystem
 {
-    protected function getOperatingSystem(): string
+    protected static function getOperatingSystem(): string
     {
         if (\PHP_OS === 'Darwin') {
             return 'Mac';

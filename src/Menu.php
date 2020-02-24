@@ -3,7 +3,7 @@
 namespace MortenScheel\PhpDependencyInstaller;
 
 use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
-use MortenScheel\PhpDependencyInstaller\Parser\ConfigParser;
+use MortenScheel\PhpDependencyInstaller\Parser\PresetParser;
 use PhpSchool\CliMenu\Action\GoBackAction;
 use PhpSchool\CliMenu\Builder\CliMenuBuilder;
 use PhpSchool\CliMenu\CliMenu;
@@ -36,7 +36,7 @@ class Menu
     {
         $this->filesystem = new Filesystem();
         $this->selected_recipes = collect();
-        $this->available_recipes = (new ConfigParser())->getRecipes();
+        $this->available_recipes = (new PresetParser())->getRecipes();
         $this->whiteOnBlack = (new MenuStyle())->setBg('black')->setFg('white');
     }
 

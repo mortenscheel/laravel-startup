@@ -1,56 +1,74 @@
-- ide-helper:
-    - action: ComposerInstall
+laravel-ide-helper:
+  description: Laravel IDE Helper, generates correct PHPDocs for all Facade classes, to improve auto-completion.
+  url: https://github.com/barryvdh/laravel-ide-helper
+  actions:
+    - type: ComposerRequire
       package: barryvdh/laravel-ide-helper
       dev: true
-      then:
-        - action: ArtisanCommand
-          command: "vendor:publish"
-          args:
-            --provider: Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider
-            --tag: config
-- cors:
-    - action: ComposerInstall
+    - type: ArtisanCommand
+      command: "vendor:publish"
+      args:
+        --provider: Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider
+        --tag: config
+laravel-cors:
+  description: Adds CORS (Cross-Origin Resource Sharing) headers support in your Laravel application
+  url: https://github.com/fruitcake/laravel-cors
+  actions:
+    - type: ComposerRequire
       package: fruitcake/laravel-cors
-      then:
-        - action: ArtisanCommand
-          command: "vendor:publish"
-          args:
-            --tag: cors
-        - action: AppendPhpArray
-          file: app/Http/Kernel.php
-          array: "$middleware"
-          value: \Fruitcake\Cors\HandleCors::class
-- passport:
-    - action: ComposerInstall
+    - type: ArtisanCommand
+      command: "vendor:publish"
+      args:
+        --tag: cors
+    - type: AppendPhpArray
+      file: app/Http/Kernel.php
+      array: "$middleware"
+      value: \Fruitcake\Cors\HandleCors::class
+laravel-passport:
+  description: Laravel Passport provides OAuth2 server support to Laravel.
+  url: https://laravel.com/docs/passport
+  actions:
+    - type: ComposerRequire
       package: laravel/passport
-      then:
-        - action: ArtisanCommand
-          command: "migrate"
-        - action: ArtisanCommand
-          command: "passport:install"
-        - action: AddClassImport
-          class: App\User
-          import: Laravel\Passport\HasApiToken
-        - action: AddTrait
-          class: App\User
-          trait: HasApiToken
-        - action: AddClassImport
-          class: App\Providers\AuthServiceProvider
-          import: Laravel\Passport\Passport
-        - action: AppendPhpMethod
-          class: App\Providers\AuthServiceProvider
-          method: boot
-          append: "Passport::routes();"
-        - action: CaptureReplace
-          file: config/auth.php
-          capture: "~'guards'.*'api'.*'driver' => '(\\w+)'~mUs"
-          replacement: passport
-- telescope:
-    - action: ComposerInstall
+    - type: ArtisanCommand
+      command: migrate
+    - type: ArtisanCommand
+      command: "passport:install"
+    - type: AddClassImport
+      class: App\User
+      import: Laravel\Passport\HasApiToken
+    - type: AddTrait
+      class: App\User
+      trait: HasApiToken
+    - type: AddClassImport
+      class: App\Providers\AuthServiceProvider
+      import: Laravel\Passport\Passport
+    - type: AppendPhpMethod
+      class: App\Providers\AuthServiceProvider
+      method: boot
+      append: "Passport::routes();"
+    - type: CaptureReplace
+      file: config/auth.php
+      capture: "~'guards'.*'api'.*'driver' => '(\\w+)'~mUs"
+      replacement: passport
+laravel-telescope:
+  description: An elegant debug assistant for the Laravel framework.
+  url: https://laravel.com/docs/telescope
+  actions:
+    - type: ComposerRequire
       package: laravel/telescope
-      then:
-        - action: ArtisanCommand
-          command: "telescope:install"
-        - action: ArtisanCommand
-          command: migrate
+    - type: ArtisanCommand
+      command: "telescope:install"
+    - type: ArtisanCommand
+      command: migrate
+php-cs-fixer:
+  description: A tool to automatically fix PHP code style
+  url: https://github.com/FriendsOfPHP/PHP-CS-Fixer
+  actions:
+    - type: ComposerRequire
+      package: friendsofphp/php-cs-fixer
+      dev: true
+
+
+
 

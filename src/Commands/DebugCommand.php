@@ -2,16 +2,14 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Commands;
 
-use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
-use Symfony\Component\Console\Command\Command;
+use MortenScheel\PhpDependencyInstaller\Filesystem;
+use MortenScheel\PhpDependencyInstaller\Parser\PresetParser;
+use MortenScheel\PhpDependencyInstaller\RecipeRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
-class DebugCommand extends Command
+class DebugCommand extends BaseCommand
 {
-    use RunsShellCommands;
-
     /**
      * Configure the command options.
      *
@@ -19,8 +17,7 @@ class DebugCommand extends Command
      */
     protected function configure()
     {
-        $this
-            ->setName('debug')
+        $this->setName('debug')
             ->setDescription('Command for ad.hoc debugging during development');
     }
 
@@ -33,34 +30,8 @@ class DebugCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $test = [
-            ['laravel-passport' => [
-                'description' => 'Laravel Passport provides OAuth2 server support to Laravel.',
-                'url' => 'https://laravel.com/docs/master/passport',
-                'alias' => 'passport',
-                'action' => 'ComposerInstall',
-                'package' => 'laravel/laravel-passport',
-                'then' => [
-                    [
-                        'action' => 'ArtisanCommand',
-                        'command' => 'migrate'
-                    ],
-                    [
-                        'action' => 'ArtisanCommand',
-                        'command' => 'passport:install'
-                    ]
-                ]
-            ]],
-            ['laravel-ide-helper' => [
-                'description' => 'Laravel IDE helper',
-                'url' => 'https://github.com/barryvdh/laravel-ide-helper',
-                'alias' => 'ide-helper',
-                'action' => 'composerinstall',
-            ]],
-        ];
-        $yaml = new Yaml();
-        $result = $yaml->dump($test, 5);
-//        $result = \json_encode($test, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES);
-        $output->writeln($result);
+        $repo = new RecipeRepository(new Filesystem());
+        dump($repo->all()->toArray());
+        return 0;
     }
 }

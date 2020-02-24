@@ -55,7 +55,7 @@ return (new \PhpCsFixer\Config())
             'spacing' => 'one'
         ],
         'fully_qualified_strict_types' => true,
-        'increment_style' => true,
+        'increment_style' => 'post',
         'is_null' => true,
         'linebreak_after_opening_tag' => true,
         'mb_str_functions' => true,
@@ -64,5 +64,5 @@ return (new \PhpCsFixer\Config())
         'native_function_invocation' => true,
         'no_extra_blank_lines' => true,
         'no_unused_imports' => true,
-        'standardize_increment' => true,
+        'standardize_increment' => false,
     ]);

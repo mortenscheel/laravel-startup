@@ -2,8 +2,12 @@
 
 namespace MortenScheel\PhpDependencyInstaller;
 
+use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
+
 class Filesystem extends \Symfony\Component\Filesystem\Filesystem
 {
+    use RunsShellCommands;
+
     public function put(string $path, string $contents)
     {
         return \file_put_contents($this->getAbsolutePath($path), $contents);
@@ -14,44 +18,29 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem
         return \file_get_contents($this->getAbsolutePath($path));
     }
 
-    public function hasGlobalConfig()
-    {
-        return $this->exists($this->getGlobalConfigFilePath());
-    }
-
-    private function getGlobalConfigFolder()
+    public function getGlobalConfigPath(string $path = null)
     {
         $os = \mb_strtolower(\PHP_OS);
-        if (\mb_strpos($os, 'win') !== false) {
-            return '%APPDATA%/PhpDependencyInstaller';
+        if ($os !== 'darwin' && \mb_strpos($os, 'win') !== false) {
+            $root = getenv('APPDATA') . '\PhpDependencyInstaller';
+        } else {
+            $root = getenv('HOME') . '/.config/PhpDependencyInstaller';
         }
-        return '$HOME/.config/PhpDependencyInstaller';
+        return $path ? ($root . DIRECTORY_SEPARATOR . $path) : $root;
     }
 
-    public function getGlobalConfigFilePath()
+    public function getPresetFiles()
     {
-        return \sprintf('%s/preset-template.yml', $this->getGlobalConfigFolder());
+        if ($this->exists($this->getGlobalConfigPath('presets'))) {
+            return collect(scandir($this->getGlobalConfigPath('presets')))->filter(function ($path) {
+                return preg_match('/\.yml$/', $path);
+            })->mapWithKeys(function ($path) {
+                preg_match('/(.*)\.yml$/', $path, $match);
+                return [$match[1] => $this->getGlobalConfigPath('presets') . DIRECTORY_SEPARATOR . $path];
+            });
+        }
     }
 
-    public function getConfig()
-    {
-        return $this->get($this->getGlobalConfigFilePath());
-    }
-
-    /**
-     * @return string|null
-     */
-    public function createConfig()
-    {
-        if (!$this->exists($this->getGlobalConfigFolder())) {
-            $this->mkdir($this->getGlobalConfigFolder(), 0755);
-        }
-        if (!$this->exists($this->getGlobalConfigFilePath())) {
-            $this->copy(__DIR__ . '/../config/preset-template.yml', $this->getGlobalConfigFilePath());
-            return $this->getGlobalConfigFilePath();
-        }
-        return null;
-    }
 
     public function getAbsolutePath(string $path)
     {

@@ -2,7 +2,7 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Actions;
 
-class ComposerInstall extends Action
+class ComposerRequire extends Action
 {
     /**
      * @var string
@@ -54,13 +54,11 @@ class ComposerInstall extends Action
         if ($this->version) {
             $package .= "={$this->version}";
         }
-        $command = [
-            $this->getExecutable('php'),
-            '-n',
-            $this->getExecutable('composer'),
+        $command = self::createComposerCommand([
             'require',
             '--no-interaction',
-            $package];
+            $package
+        ]);
         if ($this->dev) {
             $command[] = '--dev';
         }
@@ -73,14 +71,8 @@ class ComposerInstall extends Action
 
     public function isInstalled(): bool
     {
-        return $this->shell([
-            $this->getExecutable('php'),
-            '-n',
-            $this->getExecutable('composer'),
-            'show',
-            '--quiet',
-            $this->package
-        ]);
+        $command = self::createComposerCommand(['show', '--quiet', $this->package]);
+        return $this->shell($command);
     }
 
     public function getPackageWithVersion()
