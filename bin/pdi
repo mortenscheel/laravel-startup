@@ -2,9 +2,10 @@
 <?php
 
 use Dotenv\Dotenv;
+use MortenScheel\PhpDependencyInstaller\Commands\PresetCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\ShowCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\DebugCommand;
-use MortenScheel\PhpDependencyInstaller\Commands\InstallCommand;
+use MortenScheel\PhpDependencyInstaller\Commands\RecipeCommand;
 use MortenScheel\PhpDependencyInstaller\Filesystem;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -19,11 +20,10 @@ if (!\defined('PDI_ROOT')) {
 Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
 
 $app = new Symfony\Component\Console\Application('PHP Dependency Installer', '1.0-beta');
-$filesystem = new Filesystem();
-$app->add(new InstallCommand($filesystem));
-$app->add(new ShowCommand($filesystem));
+$app->add(new RecipeCommand());
+$app->add(new PresetCommand());
 if (\getenv('DEBUG')) {
-    $app->add(new DebugCommand($filesystem));
+    $app->add(new DebugCommand());
 }
 $app->setDefaultCommand('install');
 

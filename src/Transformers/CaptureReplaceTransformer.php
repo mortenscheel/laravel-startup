@@ -38,6 +38,7 @@ class CaptureReplaceTransformer implements Transformer
         if (\preg_match($this->capture, $this->original, $match, \PREG_OFFSET_CAPTURE)) {
             return $match[1];
         }
+        return null;
     }
 
     public function transform(): ?string

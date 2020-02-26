@@ -20,7 +20,7 @@ class AppendPhpMethod extends FileTransformerAction
         $this->class = $item['class'];
         $this->method = $item['method'];
         $this->append = $item['append'];
-        parent::__construct();
+        parent::__construct($item);
     }
 
     public function getDescription(): string
@@ -39,6 +39,6 @@ class AppendPhpMethod extends FileTransformerAction
 
     protected function getFilePath(): string
     {
-        return $this->findClassFile($this->class);
+        return self::findClassFile($this->class);
     }
 }

@@ -11,7 +11,7 @@ class CopyFile extends Action
 
     public function __construct(array $item)
     {
-        parent::__construct();
+        parent::__construct($item);
         $this->source = $item['source'];
         $this->destination = $item['destination'];
     }
@@ -34,11 +34,11 @@ class CopyFile extends Action
             return false;
         }
         $destination_folder = \dirname($destination_absolute);
-        if (!$this->filesystem->exists($destination_folder)) {
-            if (!\mkdir($destination_folder, 0755, true) && !\is_dir($destination_folder)) {
-                $this->error = \sprintf('Directory "%s" was not created', $destination_folder);
-                return false;
-            }
+        if (!$this->filesystem->exists($destination_folder) &&
+            !\mkdir($destination_folder, 0755, true) &&
+            !\is_dir($destination_folder)) {
+            $this->error = \sprintf('Directory "%s" was not created', $destination_folder);
+            return false;
         }
         $this->filesystem->copy($source_absolute, $destination_absolute);
         return true;

@@ -2,7 +2,9 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Actions;
 
-class ArtisanCommand extends Action
+use Symfony\Component\Process\Process;
+
+class ArtisanCommand extends Action implements AsyncAction
 {
     /**
      * @var string
@@ -19,7 +21,7 @@ class ArtisanCommand extends Action
      */
     public function __construct(array $item)
     {
-        parent::__construct();
+        parent::__construct($item);
         $this->command = $item['command'];
         $this->arguments = array_get($item, 'args', []);
     }
@@ -45,16 +47,12 @@ class ArtisanCommand extends Action
 
     public function execute(): bool
     {
-        if (!$this->filesystem->exists(\getcwd() . '/artisan')) {
-            $this->error = 'Current folder is not a Laravel project';
-            return false;
-        }
-        $command = [self::getExecutable('php'), '-n', 'artisan', $this->command];
-        $arguments = $this->parseArtisanArguments($this->arguments);
-        if (!$this->shell(\array_merge($command, $arguments))) {
-            $this->error = 'Artisan command failed';
-            return false;
-        }
-        return true;
+        return $this->getProcess()->run() === 0;
+    }
+
+    public function getProcess(): Process
+    {
+        $command = array_merge([$this->command], $this->parseArtisanArguments($this->arguments));
+        return $this->shell->createArtisanProcess($command);
     }
 }

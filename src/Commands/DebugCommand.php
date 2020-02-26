@@ -2,9 +2,9 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Commands;
 
-use MortenScheel\PhpDependencyInstaller\Filesystem;
-use MortenScheel\PhpDependencyInstaller\Parser\PresetParser;
-use MortenScheel\PhpDependencyInstaller\RecipeRepository;
+use MortenScheel\PhpDependencyInstaller\ActionRunner;
+use MortenScheel\PhpDependencyInstaller\Actions\ComposerRequire;
+use MortenScheel\PhpDependencyInstaller\Repositories\PresetRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -30,8 +30,9 @@ class DebugCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $repo = new RecipeRepository(new Filesystem());
-        dump($repo->all()->toArray());
+        $repo = new PresetRepository();
+        $presets = $repo->all();
+        dump($presets->toArray());
         return 0;
     }
 }

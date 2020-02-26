@@ -14,7 +14,7 @@ class AddClassImport extends FileTransformerAction
     {
         $this->class = $item['class'];
         $this->import = $item['import'];
-        parent::__construct();
+        parent::__construct($item);
     }
 
     public function getDescription(): string
@@ -24,12 +24,12 @@ class AddClassImport extends FileTransformerAction
 
     protected function getTransformer(string $original): ?Transformer
     {
-        $basename = $this->getClassBaseName($this->class);
+        $basename = self::getClassBaseName($this->class);
         return new AddClassImportTransformer($original, $basename, $this->import);
     }
 
     protected function getFilePath(): string
     {
-        return $this->findClassFile($this->class);
+        return self::findClassFile($this->class);
     }
 }

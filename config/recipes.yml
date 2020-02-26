@@ -1,6 +1,7 @@
 laravel-ide-helper:
   description: Laravel IDE Helper, generates correct PHPDocs for all Facade classes, to improve auto-completion.
   url: https://github.com/barryvdh/laravel-ide-helper
+  alias: ide-helper
   actions:
     - type: ComposerRequire
       package: barryvdh/laravel-ide-helper
@@ -13,6 +14,7 @@ laravel-ide-helper:
 laravel-cors:
   description: Adds CORS (Cross-Origin Resource Sharing) headers support in your Laravel application
   url: https://github.com/fruitcake/laravel-cors
+  alias: cors
   actions:
     - type: ComposerRequire
       package: fruitcake/laravel-cors
@@ -27,6 +29,7 @@ laravel-cors:
 laravel-passport:
   description: Laravel Passport provides OAuth2 server support to Laravel.
   url: https://laravel.com/docs/passport
+  alias: passport
   actions:
     - type: ComposerRequire
       package: laravel/passport
@@ -34,6 +37,7 @@ laravel-passport:
       command: migrate
     - type: ArtisanCommand
       command: "passport:install"
+      depends: "artisan migrate"
     - type: AddClassImport
       class: App\User
       import: Laravel\Passport\HasApiToken
@@ -54,6 +58,7 @@ laravel-passport:
 laravel-telescope:
   description: An elegant debug assistant for the Laravel framework.
   url: https://laravel.com/docs/telescope
+  alias: telescope
   actions:
     - type: ComposerRequire
       package: laravel/telescope
@@ -64,11 +69,24 @@ laravel-telescope:
 php-cs-fixer:
   description: A tool to automatically fix PHP code style
   url: https://github.com/FriendsOfPHP/PHP-CS-Fixer
+  alias: cs-fixer
   actions:
     - type: ComposerRequire
       package: friendsofphp/php-cs-fixer
       dev: true
-
+configure-sqlite:
+  description: Setup Laravel .env to use sqlite
+  actions:
+    - type: CaptureReplace
+      file: .env
+      capture: "~^DB_CONNECTION=(.*)$~m"
+      replacement: sqlite
+    - type: CaptureReplace
+      file: .env
+      capture: "~^(#?D)B_DATABASE=~m"
+      replacement: "#D"
+    - type: ShellCommand
+      command: "touch database/database.sqlite"
 
 
 

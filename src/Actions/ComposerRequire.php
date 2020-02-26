@@ -2,7 +2,9 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Actions;
 
-class ComposerRequire extends Action
+use Symfony\Component\Process\Process;
+
+class ComposerRequire extends Action implements AsyncAction
 {
     /**
      * @var string
@@ -16,6 +18,8 @@ class ComposerRequire extends Action
      * @var bool
      */
     public $dev;
+    /** @var bool  */
+    public $skip_update = false;
 
     /**
      * InstallComposerPackage constructor.
@@ -23,7 +27,7 @@ class ComposerRequire extends Action
      */
     public function __construct(array $item)
     {
-        parent::__construct();
+        parent::__construct($item);
         $this->package = $item['package'];
         $this->version = array_get($item, 'version');
         $this->dev = array_get($item, 'dev', false);
@@ -47,32 +51,16 @@ class ComposerRequire extends Action
 
     public function execute(): bool
     {
-        if ($this->isInstalled()) {
-            return true;
-        }
-        $package = $this->package;
-        if ($this->version) {
-            $package .= "={$this->version}";
-        }
-        $command = self::createComposerCommand([
-            'require',
-            '--no-interaction',
-            $package
-        ]);
-        if ($this->dev) {
-            $command[] = '--dev';
-        }
-        if (!$this->shell($command)) {
-            $this->error = "{$this->package} failed to install";
-            return false;
-        }
-        return true;
+        return $this->getProcess()->run() === 0;
     }
 
     public function isInstalled(): bool
     {
-        $command = self::createComposerCommand(['show', '--quiet', $this->package]);
-        return $this->shell($command);
+        return $this->shell->createComposerProcess([
+            'show',
+            '--quiet',
+            $this->package]
+        )->run() === 0;
     }
 
     public function getPackageWithVersion()
@@ -82,5 +70,25 @@ class ComposerRequire extends Action
             return $name;
         }
         return "{$name}={$this->version}";
+    }
+
+    public function getProcess(): Process
+    {
+        $package = $this->package;
+        if ($this->version) {
+            $package .= "={$this->version}";
+        }
+        $command = [
+            'require',
+            '--no-interaction',
+            $package
+        ];
+        if ($this->dev) {
+            $command[] = '--dev';
+        }
+        if ($this->skip_update) {
+            $command[] = '--no-update';
+        }
+        return $this->shell->createComposerProcess($command);
     }
 }

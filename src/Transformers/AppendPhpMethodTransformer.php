@@ -62,6 +62,7 @@ class AppendPhpMethodTransformer implements Transformer
         if (\preg_match($method_capture, $this->original, $method_match, \PREG_OFFSET_CAPTURE)) {
             return $method_match;
         }
+        return null;
     }
 
     public function isTransformationRequired(): bool

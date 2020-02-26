@@ -2,10 +2,8 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Parser;
 
-use MortenScheel\PhpDependencyInstaller\Actions\Action;
-use MortenScheel\PhpDependencyInstaller\Actions\ActionCollection;
 use MortenScheel\PhpDependencyInstaller\Filesystem;
-use MortenScheel\PhpDependencyInstaller\RecipeRepository;
+use MortenScheel\PhpDependencyInstaller\Repositories\RecipeRepository;
 use Symfony\Component\Yaml\Yaml;
 use Tightenco\Collect\Support\Collection;
 
@@ -13,14 +11,16 @@ class PresetParser
 {
     /**
      * @param string $path
-     * @return Collection|Recipe[]
+     * @return Preset
      */
-    public static function parseFile(string $path): Collection
+    public static function parseFile(string $path): Preset
     {
-        $steps = Yaml::parseFile($path);
-        $recipes = new RecipeRepository(new Filesystem());
-        return collect($steps)->map(function ($step) use ($recipes) {
-            return $recipes->get($step);
+        $name = pathinfo($path, PATHINFO_FILENAME);
+        $preset_recipes = Yaml::parseFile($path);
+        $recipes_repository = new RecipeRepository(new Filesystem());
+        $recipes = collect($preset_recipes)->map(function ($preset_recipe) use ($recipes_repository) {
+            return $recipes_repository->get($preset_recipe, true);
         });
+        return new Preset($name, $recipes);
     }
 }

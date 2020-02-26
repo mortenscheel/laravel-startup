@@ -29,7 +29,7 @@ class AppendPhpArray extends FileTransformerAction
         $this->file = $item['file'];
         $this->array = $item['array'];
         $this->value = $item['value'];
-        parent::__construct();
+        parent::__construct($item);
     }
 
     public function getDescription(): string

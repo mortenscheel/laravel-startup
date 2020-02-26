@@ -24,7 +24,7 @@ class AddTrait extends FileTransformerAction
     {
         $this->class = $item['class'];
         $this->trait = $item['trait'];
-        parent::__construct();
+        parent::__construct($item);
     }
 
     public function getDescription(): string
@@ -36,13 +36,13 @@ class AddTrait extends FileTransformerAction
     {
         return new AddTraitTransformer(
             $original,
-            $this->getClassBaseName($this->class),
+            self::getClassBaseName($this->class),
             $this->trait
         );
     }
 
     protected function getFilePath(): string
     {
-        return $this->findClassFile($this->class);
+        return self::findClassFile($this->class);
     }
 }

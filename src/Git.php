@@ -2,41 +2,54 @@
 
 namespace MortenScheel\PhpDependencyInstaller;
 
-use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
-
 class Git
 {
-    use RunsShellCommands;
+    public const STATUS_NOT_INSTALLED = 'not-installed';
+    public const STATUS_NOT_INITIALIZED = 'not-initialized';
+    public const STATUS_CLEAN = 'clean';
+    public const STATUS_DIRTY = 'dirty';
+    /**
+     * @var Shell
+     */
+    private $shell;
 
-    public function isExecutable()
+    /**
+     * Git constructor.
+     */
+    public function __construct()
     {
-        return $this->shell(['git', '--version']) === true;
+        $this->shell = new Shell();
     }
 
-    public function isRepo()
+    public function getStatus()
+    {
+        if (!$this->isExecutable()) {
+            return self::STATUS_NOT_INSTALLED;
+        }
+        if (!$this->isRepo()) {
+            return self::STATUS_NOT_INITIALIZED;
+        }
+        if ($this->isDirty()) {
+            return self::STATUS_DIRTY;
+        }
+        return self::STATUS_CLEAN;
+    }
+
+    protected function isExecutable()
+    {
+        return $this->shell->execute(['git', '--version']) === true;
+    }
+
+    protected function isRepo()
     {
         $files = new Filesystem();
         return $files->exists($files->getAbsolutePath('.git'));
     }
 
-    public function isDirty()
+    protected function isDirty()
     {
-        $this->shell(['git', 'status', '--short']);
-        return $this->process_output !== '';
+        $this->shell->execute(['git', 'status', '--short']);
+        return $this->shell->flushOutput() !== '';
     }
 
-    public function init()
-    {
-        return $this->shell(['git', 'init']);
-    }
-
-    public function add(string $path = '.')
-    {
-        return $this->shell(['git', 'add', $path]);
-    }
-
-    public function commit(string $message)
-    {
-        return $this->shell(['git', 'commit', '-m', $message]);
-    }
 }

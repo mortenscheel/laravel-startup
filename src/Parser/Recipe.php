@@ -24,17 +24,21 @@ class Recipe implements Arrayable
      * @var Collection|Action[]
      */
     private $actions;
+    /**
+     * @var string|null
+     */
+    private $alias;
 
     /**
      * Recipe constructor.
      * @param array $definition
-     * @param string|null $name
      */
-    public function __construct(array $definition, string $name = null)
+    public function __construct(array $definition)
     {
-        $this->name = $name;
+        $this->name = array_get($definition, 'name');
         $this->description = array_get($definition, 'description');
         $this->url = array_get($definition, 'url');
+        $this->alias = array_get($definition, 'alias');
         $this->actions = collect($definition['actions'])->map(function ($action_definition) {
             return Action::make($action_definition);
         });
@@ -85,5 +89,13 @@ class Recipe implements Arrayable
                 return $action->getDescription();
             })->toArray()
         ];
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAlias(): ?string
+    {
+        return $this->alias;
     }
 }

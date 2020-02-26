@@ -21,7 +21,7 @@ class CaptureReplace extends FileTransformerAction
         $this->file = $item['file'];
         $this->capture = $item['capture'];
         $this->replacement = $item['replacement'];
-        parent::__construct();
+        parent::__construct($item);
     }
 
     public function getDescription(): string

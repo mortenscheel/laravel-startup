@@ -2,7 +2,6 @@
 
 namespace MortenScheel\PhpDependencyInstaller;
 
-use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
 use MortenScheel\PhpDependencyInstaller\Parser\PresetParser;
 use PhpSchool\CliMenu\Action\GoBackAction;
 use PhpSchool\CliMenu\Builder\CliMenuBuilder;
@@ -18,8 +17,6 @@ use Tightenco\Collect\Support\Collection;
 
 class Menu
 {
-    use RunsShellCommands;
-
     /** @var Collection */
     private $selected_recipes;
     private $selected_cookbook;
@@ -31,13 +28,18 @@ class Menu
     private $whiteOnBlack;
     /** @var Filesystem */
     private $filesystem;
+    /**
+     * @var Shell
+     */
+    private $shell;
 
-    public function __construct()
+    public function __construct(Filesystem $filesystem, Shell $shell)
     {
-        $this->filesystem = new Filesystem();
+        $this->filesystem = $filesystem;
         $this->selected_recipes = collect();
         $this->available_recipes = (new PresetParser())->getRecipes();
         $this->whiteOnBlack = (new MenuStyle())->setBg('black')->setFg('white');
+        $this->shell = $shell;
     }
 
     public function open()
@@ -56,7 +58,7 @@ class Menu
         $menu->addCustomControlMapping('o', function (CliMenu $menu) {
             $selected = $menu->getSelectedItem()->getText();
             $url = $this->available_recipes->get($selected)['url'];
-            $this->shell(['open', $url]);
+            $this->shell->execute(['open', $url]);
         });
         try {
             $menu->open();
@@ -140,6 +142,7 @@ class Menu
             return $builder;
         } elseif ($this->selected_cookbook) {
             // Show cookbook recipes
+            $a=0;
         } else {
             $builder->setTitle('Confirm selection');
             foreach ($this->selected_recipes as $name => $selected_recipe) {

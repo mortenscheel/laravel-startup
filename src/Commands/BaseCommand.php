@@ -1,25 +1,29 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller\Commands;
 
-
-use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
 use MortenScheel\PhpDependencyInstaller\Filesystem;
+use MortenScheel\PhpDependencyInstaller\Shell;
 use Symfony\Component\Console\Command\Command;
 
 abstract class BaseCommand extends Command
 {
-    use RunsShellCommands;
-
     /**
      * @var Filesystem
      */
     protected $filesystem;
+    /**
+     * @var Shell
+     */
+    protected $shell;
 
-    public function __construct(Filesystem $filesystem)
+    /**
+     * BaseCommand constructor.
+     */
+    public function __construct()
     {
         parent::__construct(null);
-        $this->filesystem = $filesystem;
+        $this->filesystem = new Filesystem();
+        $this->shell = new Shell();
     }
 }

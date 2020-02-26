@@ -9,26 +9,34 @@ use MortenScheel\PhpDependencyInstaller\Actions\Files\AppendPhpMethod;
 use MortenScheel\PhpDependencyInstaller\Actions\Files\CaptureReplace;
 use MortenScheel\PhpDependencyInstaller\Actions\Files\CopyFile;
 use MortenScheel\PhpDependencyInstaller\Concerns\ReportsErrors;
-use MortenScheel\PhpDependencyInstaller\Concerns\RunsShellCommands;
 use MortenScheel\PhpDependencyInstaller\Filesystem;
 use MortenScheel\PhpDependencyInstaller\Parser\ParserException;
+use MortenScheel\PhpDependencyInstaller\Shell;
 use Tightenco\Collect\Contracts\Support\Arrayable;
 use Tightenco\Collect\Support\Collection;
 
 abstract class Action implements Arrayable
 {
-    use RunsShellCommands, ReportsErrors;
+    use ReportsErrors;
 
     protected static $_action_class_map;
     /** @var Collection */
     protected static $_classmap;
     /** @var Filesystem */
     protected $filesystem;
+    /** @var Shell */
+    protected $shell;
+    /** @var string|null */
+    protected $dependency;
 
-    public function __construct()
+    public function __construct(array $item)
     {
+        $this->dependency = array_get($item, 'depends');
         $this->filesystem = new Filesystem();
+        $this->shell = new Shell();
     }
+
+    abstract public function execute(): bool;
 
     /**
      * @param array $settings
@@ -50,7 +58,7 @@ abstract class Action implements Arrayable
 
     protected static function getActionClass(string $name)
     {
-        switch ($name){
+        switch ($name) {
             case 'ComposerRequire':
             case 'composer-require':
                 return ComposerRequire::class;
@@ -76,27 +84,13 @@ abstract class Action implements Arrayable
             case 'CopyFile':
             case 'copy-file':
                 return CopyFile::class;
+            case 'ShellCommand':
+            case 'shell':
+            case 'cli':
+                return ShellCommand::class;
+            default:
+                return null;
         }
-    }
-
-    protected static function getClassMap()
-    {
-        if (!self::$_classmap) {
-            $map = collect();
-            $global = self::getShellOutput(self::createComposerCommand([
-                    'config',
-                    '--global',
-                    'data-dir'])) . '/vendor/composer/autoload_classmap.php';
-            if (file_exists($global)) {
-                $map = collect(require $global);
-            }
-            $local = \getcwd() . '/vendor/composer/autoload_classmap.php';
-            if (file_exists($local)) {
-                $map = $map->merge(collect(require $local));
-            }
-            self::$_classmap = $map;
-        }
-        return self::$_classmap;
     }
 
     protected static function getClassBaseName(string $class)
@@ -114,6 +108,29 @@ abstract class Action implements Arrayable
         return self::getClassMap()->get($key);
     }
 
+    protected static function getClassMap()
+    {
+        if (!self::$_classmap) {
+            $map = collect();
+            $detect_global = (new Shell())->createComposerProcess([
+                'config',
+                '--global',
+                'data-dir']);
+            $detect_global->run();
+            $global_root = rtrim($detect_global->getOutput());
+            $global = $global_root . '/vendor/composer/autoload_classmap.php';
+            if (file_exists($global)) {
+                $map = collect(require $global);
+            }
+            $local = \getcwd() . '/vendor/composer/autoload_classmap.php';
+            if (file_exists($local)) {
+                $map = $map->merge(collect(require $local));
+            }
+            self::$_classmap = $map;
+        }
+        return self::$_classmap;
+    }
+
     public function toArray()
     {
         $array = ['description' => $this->getDescription()];
@@ -126,4 +143,12 @@ abstract class Action implements Arrayable
     }
 
     abstract public function getDescription(): string;
+
+    /**
+     * @return string|null
+     */
+    public function getDependency(): ?string
+    {
+        return $this->dependency;
+    }
 }
