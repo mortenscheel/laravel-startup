@@ -3,6 +3,8 @@
 namespace MortenScheel\PhpDependencyInstaller;
 
 use MortenScheel\PhpDependencyInstaller\Parser\PresetParser;
+use MortenScheel\PhpDependencyInstaller\Repositories\PresetRepository;
+use MortenScheel\PhpDependencyInstaller\Repositories\RecipeRepository;
 use PhpSchool\CliMenu\Action\GoBackAction;
 use PhpSchool\CliMenu\Builder\CliMenuBuilder;
 use PhpSchool\CliMenu\CliMenu;
@@ -11,7 +13,6 @@ use PhpSchool\CliMenu\MenuItem\CheckboxItem;
 use PhpSchool\CliMenu\MenuItem\MenuItemInterface;
 use PhpSchool\CliMenu\MenuItem\MenuMenuItem;
 use PhpSchool\CliMenu\MenuStyle;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Tightenco\Collect\Support\Collection;
 
@@ -33,13 +34,14 @@ class Menu
      */
     private $shell;
 
-    public function __construct(Filesystem $filesystem, Shell $shell)
+    public function __construct()
     {
-        $this->filesystem = $filesystem;
+        $this->filesystem = new Filesystem();
         $this->selected_recipes = collect();
-        $this->available_recipes = (new PresetParser())->getRecipes();
         $this->whiteOnBlack = (new MenuStyle())->setBg('black')->setFg('white');
-        $this->shell = $shell;
+        $this->shell = new Shell();
+        $this->recipe_repository = new RecipeRepository();
+        $this->preset_repository = new PresetRepository();
     }
 
     public function open()
@@ -47,6 +49,8 @@ class Menu
         $builder = new CliMenuBuilder();
         $this->setStyle($builder);
         $this->buildMainMenu($builder);
+        $builder->setItemExtra('[i] info');
+        $builder->enableAutoShortcuts();
         $menu = $builder->build();
         $menu->addCustomControlMapping('i', function (CliMenu $menu) {
             $selected = $menu->getSelectedItem()->getText();
@@ -83,35 +87,47 @@ class Menu
 
     private function buildMainMenu(CliMenuBuilder $builder)
     {
-        $cookbooks = $this->generateCookbookSubmenus();
-        if (!empty($cookbooks)) {
-            $builder->addStaticItem('Use a stored cookbook');
-            foreach ($cookbooks as $name => $submenu) {
+        $presets = $this->generatePresetSubmenus();
+        if (!empty($presets)) {
+            $builder->addStaticItem('Available presets');
+            foreach ($presets as $name => $submenu) {
                 $builder->addSubMenuFromBuilder($name, $submenu);
             }
             $builder->addLineBreak('-');
         }
-        $builder->addStaticItem('Select recipes to install');
-        foreach ($this->available_recipes as $name => $recipe) {
-            $builder->addCheckboxItem($name, function (CliMenu $menu) {
+        $builder->addStaticItem('Available recipes');
+        foreach ($this->recipe_repository->all() as $recipe) {
+            $builder->addCheckboxItem($recipe->getName(), function (CliMenu $menu) {
                 $this->onRecipeToggled($menu);
-            });
+            }, true);
         }
         $builder->addLineBreak();
         $builder->addSubMenuFromBuilder('Continue', $this->buildAcceptMenu());
     }
 
-    private function generateCookbookSubmenus()
+    private function generatePresetSubmenus()
     {
-        $cookbooks = [];
+        $presets = [];
         /** @var SplFileInfo $file */
-        foreach (Finder::create()->in(\getcwd())->name('*.yml')->depth(0)->files() as $file) {
-            $name = $file->getBasename();
-            $submenu = (new CliMenuBuilder())->setTitle('Install ' . $file->getBasename() . '?')
-                ->addItem('Go back', new GoBackAction());
-            $cookbooks[$name] = $submenu;
+        foreach ($this->preset_repository->all() as $preset) {
+            $submenu = (new CliMenuBuilder())->setTitle('Preset: ' . $preset->getName())
+                ->addStaticItem('Included recipes')
+                ->addLineBreak('-');
+            foreach ($preset->getRecipes() as $recipe) {
+                $name = $recipe->getName();
+                if ($description = $recipe->getDescription()) {
+                    $name .= " ($description)";
+                }
+                $checkbox = new CheckboxItem($name, function () {
+
+                }, false, true);
+                $checkbox->setChecked();
+                $submenu->addMenuItem($checkbox);
+            }
+            $submenu->addItem('Go back', new GoBackAction());
+            $presets[$preset->getName()] = $submenu;
         }
-        return $cookbooks;
+        return $presets;
     }
 
     private function onRecipeToggled(CliMenu $menu)
@@ -142,7 +158,7 @@ class Menu
             return $builder;
         } elseif ($this->selected_cookbook) {
             // Show cookbook recipes
-            $a=0;
+            $a = 0;
         } else {
             $builder->setTitle('Confirm selection');
             foreach ($this->selected_recipes as $name => $selected_recipe) {

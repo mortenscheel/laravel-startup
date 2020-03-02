@@ -38,6 +38,22 @@ class RecipeRepository
         return $default->merge($custom);
     }
 
+    public function getCustomRecipeConfigurationPath(bool $create_if_missing = false)
+    {
+        $path = $this->filesystem->getGlobalConfigPath('recipes.yml');
+        if ($create_if_missing){
+            $folder = $this->filesystem->getGlobalConfigPath();
+            if (!$this->filesystem->exists($folder)){
+                $this->filesystem->mkdir($folder, 0755);
+            }
+            if (!$this->filesystem->exists($path)){
+                $template = PDI_ROOT . '/config/recipes-template.yml';
+                $this->filesystem->copy($template, $path);
+            }
+        }
+        return $path;
+    }
+
     protected function getDefaultRecipeDefinitions(): Collection
     {
         $path = __DIR__ . '/../../config/recipes.yml';
@@ -49,7 +65,7 @@ class RecipeRepository
 
     protected function getCustomRecipeDefinitions(): Collection
     {
-        $path = $this->filesystem->getGlobalConfigPath('recipes.yml');
+        $path = $this->getCustomRecipeConfigurationPath();
         if ($this->filesystem->exists($path)) {
             return collect(Yaml::parseFile($path))->map(function (array $definition, string $name) {
                 $definition['name'] = $name;

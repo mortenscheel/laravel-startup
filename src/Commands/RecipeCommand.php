@@ -29,6 +29,7 @@ class RecipeCommand extends BaseCommand
             ->setAliases(['recipes'])
             ->addArgument('recipes', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Recipes to install, comma separated')
             ->addOption('list', 'l', InputOption::VALUE_NONE, 'List available recipes')
+            ->addOption('edit', 'e', InputOption::VALUE_NONE, 'Open custom recipes in text editor')
             ->addOption('save', 's', InputOption::VALUE_OPTIONAL, 'Save as preset with the give name')
             ->addOption('no-optimize', null, InputOption::VALUE_NONE, 'Do not optimize the order of actions')
             ->addOption('skip-git-check', null, InputOption::VALUE_NONE, 'Allow running without a clean git repository')
@@ -67,6 +68,10 @@ class RecipeCommand extends BaseCommand
             }
             $table->render();
             return 0;
+        }
+        if ($input->getOption('edit')){
+            $path = $repo->getCustomRecipeConfigurationPath(true);
+            return $this->shell->execute(['open', $path]) ? 0 : 1;
         }
         $recipe_names = $input->getArgument('recipes');
         if (empty($recipe_names)) {

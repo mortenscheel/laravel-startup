@@ -2,11 +2,13 @@
 <?php
 
 use Dotenv\Dotenv;
+use MortenScheel\PhpDependencyInstaller\Commands\MenuCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\PresetCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\ShowCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\DebugCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\RecipeCommand;
 use MortenScheel\PhpDependencyInstaller\Filesystem;
+use Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -22,10 +24,12 @@ Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
 $app = new Symfony\Component\Console\Application('PHP Dependency Installer', '1.0-beta');
 $app->add(new RecipeCommand());
 $app->add(new PresetCommand());
+$app->add(new MenuCommand());
+$app->add(new CompletionCommand());
 if (\getenv('DEBUG')) {
     $app->add(new DebugCommand());
 }
-$app->setDefaultCommand('install');
+$app->setDefaultCommand('menu');
 
 /** @noinspection PhpUnhandledExceptionInspection */
 $app->run();

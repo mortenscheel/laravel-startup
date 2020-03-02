@@ -45,7 +45,7 @@ class Preset implements Arrayable
     }
 
     /**
-     * @return Collection
+     * @return Collection|Recipe[]
      */
     public function getRecipes(): Collection
     {

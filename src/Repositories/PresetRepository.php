@@ -48,7 +48,7 @@ class PresetRepository
             return collect(scandir($this->getPresetsPath()))->filter(function ($path) {
                 return preg_match('/\.yml$/', $path);
             })->map(function ($path) {
-                return $this->getPresetsPath($path);
+                return $this->getPresetsPath() . DIRECTORY_SEPARATOR . $path;
             })->values();
         }
         return collect();
