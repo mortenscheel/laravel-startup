@@ -5,7 +5,7 @@ namespace MortenScheel\PhpDependencyInstaller\Commands;
 use MortenScheel\PhpDependencyInstaller\ActionManager;
 use MortenScheel\PhpDependencyInstaller\Actions\Action;
 use MortenScheel\PhpDependencyInstaller\Git;
-use MortenScheel\PhpDependencyInstaller\Menu;
+use MortenScheel\PhpDependencyInstaller\PhpDependencyInstallerMenu;
 use MortenScheel\PhpDependencyInstaller\Parser\Preset;
 use MortenScheel\PhpDependencyInstaller\Repositories\RecipeRepository;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -39,8 +39,9 @@ class MenuCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $menu = new Menu();
+        $menu = new PhpDependencyInstallerMenu();
         $selection = $menu->open();
+        dump($selection);
         return 0;
     }
 }
