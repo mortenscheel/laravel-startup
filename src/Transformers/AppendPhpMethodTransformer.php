@@ -38,7 +38,7 @@ class AppendPhpMethodTransformer implements Transformer
         if ($method_match = $this->captureMethod()) {
             [$body, $body_offset] = $method_match[1];
             $indent = '';
-            if (\preg_match("~%s([\t ]+)\S~mu", PHP_EOL, $body, $indent_match, \PREG_OFFSET_CAPTURE)) {
+            if (\preg_match('~' . PHP_EOL . "([\t ]+)\S~mu", $body, $indent_match, \PREG_OFFSET_CAPTURE)) {
                 $indent = $indent_match[1][0];
             }
             $offset = $body_offset + \mb_strlen($body);
