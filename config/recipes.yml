@@ -155,3 +155,9 @@ laravel-backup:
       command: "vendor:publish"
       args:
         --provider: Spatie\Backup\BackupServiceProvider
+laravel-socialite:
+  description: Handles OAuth authentication with Facebook, Twitter, Google, LinkedIn, GitHub, GitLab and Bitbucket.
+  url: https://laravel.com/docs/6.x/socialite
+  actions:
+    - type: ComposerRequire
+      package: laravel/socialite
