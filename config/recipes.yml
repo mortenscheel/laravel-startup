@@ -149,6 +149,14 @@ rap2hpoutre/laravel-log-viewer:
     - type: AppendFile
       file: routes/web.php
       append: Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-
-
-
+spatie/laravel-backup:
+  description: A Laravel package to backup your application
+  url: https://docs.spatie.be/laravel-backup/v6/introduction/
+  alias: backup
+  actions:
+    - type: ComposerRequire
+      package: spatie/laravel-backup
+    - type: ArtisanCommand
+      command: "vendor:publish"
+      args:
+        --provider: Spatie\Backup\BackupServiceProvider
