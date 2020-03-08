@@ -105,6 +105,13 @@ fideloper/proxy:
       file: app/Http/Kernel.php
       array: "$middleware"
       value: \Fideloper\Proxy\TrustProxies::class
+laravelcollective/html:
+  description: HTML and Form Builders for the Laravel Framework
+  url: https://laravelcollective.com/docs/6.0/html
+  alias: html
+  actions:
+    - type: ComposerRequire
+      package: laravelcollective/html
 
 
 
