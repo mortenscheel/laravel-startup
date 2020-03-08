@@ -36,12 +36,12 @@ class AddClassImportTransformer implements Transformer
 
     public function transform(): ?string
     {
-        $pattern = \sprintf("~(\nclass %s)~mu", $this->basename);
+        $pattern = \sprintf("~(%sclass %s)~mu", PHP_EOL, $this->basename);
         if (\preg_match($pattern, $this->original, $match, \PREG_OFFSET_CAPTURE)) {
             $offset = $match[1][1];
             $before = \mb_substr($this->original, 0, $offset);
             $after = \mb_substr($this->original, $offset);
-            return \sprintf("%suse %s;\n%s", $before, $this->import, $after);
+            return \sprintf("%suse %s;%s%s", $before, $this->import, PHP_EOL, $after);
         }
         $this->error = "Couldn't add class import";
         return null;

@@ -64,11 +64,6 @@ abstract class TransformerTestCase extends TestCase
             $original = \file_get_contents($original_path);
             $expected = \file_get_contents($expected_path);
             $test_name = \sprintf('%s: %s', $class_name, $case_folder->getRelativePathname());
-            if (\mb_stripos(\PHP_OS, 'WIN') === 0) {
-                // Convert original line endings to \r\n to allow comparison
-                $original = \str_replace("\n", "\r\n", $original);
-                $expected = \str_replace("\n", "\r\n", $expected);
-            }
             $this->originals[$test_name] = $original;
             $this->expected[$test_name] = $expected;
         }
