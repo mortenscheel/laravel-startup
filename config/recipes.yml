@@ -134,6 +134,18 @@ maatwebsite/excel:
       command: "vendor:publish"
       args:
         --provider: Maatwebsite\Excel\ExcelServiceProvider
+rap2hpoutre/laravel-log-viewer:
+  description: Laravel log viewer
+  url: https://github.com/rap2hpoutre/laravel-log-viewer
+  alias: log-viewer
+  actions:
+    - type: ComposerRequire
+      package: rap2hpoutre/laravel-log-viewer
+    - type: ArtisanCommand
+      command: "vendor:publish"
+      args:
+        --provider: Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider
+
 
 
 
