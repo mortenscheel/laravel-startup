@@ -55,7 +55,6 @@ return (new \PhpCsFixer\Config())
             'spacing' => 'one'
         ],
         'fully_qualified_strict_types' => true,
-        'increment_style' => 'post',
         'is_null' => true,
         'linebreak_after_opening_tag' => true,
         'mb_str_functions' => true,
