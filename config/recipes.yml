@@ -123,6 +123,17 @@ barryvdh/laravel-debugbar:
       command: "vendor:publish"
       args:
         --provider: Barryvdh\Debugbar\ServiceProvider
+maatwebsite/excel:
+  description: Supercharged Excel exports and imports
+  url: https://laravel-excel.com/
+  alias: excel
+  actions:
+    - type: ComposerRequire
+      package: maatwebsite/excel
+    - type: ArtisanCommand
+      command: "vendor:publish"
+      args:
+        --provider: Maatwebsite\Excel\ExcelServiceProvider
 
 
 
