@@ -38,13 +38,14 @@ class AppendPhpMethodTransformer implements Transformer
         if ($method_match = $this->captureMethod()) {
             [$body, $body_offset] = $method_match[1];
             $indent = '';
-            if (\preg_match("~\n([\t ]+)\S~mu", $body, $indent_match, \PREG_OFFSET_CAPTURE)) {
+            if (\preg_match("~%s([\t ]+)\S~mu", PHP_EOL, $body, $indent_match, \PREG_OFFSET_CAPTURE)) {
                 $indent = $indent_match[1][0];
             }
             $offset = $body_offset + \mb_strlen($body);
             return \sprintf(
-                "%s\n%s%s%s",
+                '%s%s%s%s%s',
                 \mb_substr($this->original, 0, $offset),
+                PHP_EOL,
                 $indent,
                 $this->append,
                 \mb_substr($this->original, $offset)
@@ -56,8 +57,10 @@ class AppendPhpMethodTransformer implements Transformer
     private function captureMethod()
     {
         $method_capture = \sprintf(
-            "~\n[\t ]+(?:public|private|protected)? function %s *\([^{]+{([^}]+)\n[\t ]*}~mu",
-            $this->method
+            "~%s[\t ]+(?:public|private|protected)? function %s *\([^{]+{([^}]+)%s[\t ]*}~mu",
+            PHP_EOL,
+            $this->method,
+            PHP_EOL
         );
         if (\preg_match($method_capture, $this->original, $method_match, \PREG_OFFSET_CAPTURE)) {
             return $method_match;

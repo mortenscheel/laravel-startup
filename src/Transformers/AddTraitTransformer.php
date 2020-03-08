@@ -35,8 +35,8 @@ class AddTraitTransformer implements Transformer
 
     public function transform(): ?string
     {
-        $existing_use_pattern = \sprintf('~class %s[^{]*{[^{]*(\n\s*use )([^\n]+)~mu', $this->basename);
-        $get_indent_pattern = \sprintf('~class %s[^{]*{\n([\t ]+)\S~mu', $this->basename);
+        $existing_use_pattern = \sprintf('~class %s[^{]*{[^{]*(%s\s*use )([^%s]+)~mu', $this->basename, PHP_EOL, PHP_EOL);
+        $get_indent_pattern = \sprintf('~class %s[^{]*{%s([\t ]+)\S~mu', $this->basename, PHP_EOL);
         if (\preg_match($existing_use_pattern, $this->original, $match, \PREG_OFFSET_CAPTURE)) {
             [$use_start, $offset] = $match[1];
             if (\mb_stripos($match[2][0], $this->trait) !== false) {
@@ -55,10 +55,12 @@ class AddTraitTransformer implements Transformer
             $before = \mb_substr($this->original, 0, $offset);
             $after = \mb_substr($this->original, $offset);
             return \sprintf(
-                "%s%suse %s;\n\n%s",
+                '%s%suse %s;%s%s%s',
                 $before,
                 $indent,
                 $this->trait,
+                PHP_EOL,
+                PHP_EOL,
                 $after
             );
         }
