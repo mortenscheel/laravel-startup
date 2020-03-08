@@ -65,6 +65,8 @@ laravel-telescope:
     - type: ArtisanCommand
       command: "telescope:install"
     - type: ArtisanCommand
+      command: "telescope:publish"
+    - type: ArtisanCommand
       command: migrate
 php-cs-fixer:
   description: A tool to automatically fix PHP code style
