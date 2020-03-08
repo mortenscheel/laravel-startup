@@ -119,6 +119,7 @@ barryvdh/laravel-debugbar:
   actions:
     - type: ComposerRequire
       package: barryvdh/laravel-debugbar
+      dev: true
     - type: ArtisanCommand
       command: "vendor:publish"
       args:
