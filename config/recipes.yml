@@ -58,7 +58,6 @@ laravel-passport:
 laravel-telescope:
   description: An elegant debug assistant for the Laravel framework.
   url: https://laravel.com/docs/telescope
-  alias: telescope
   actions:
     - type: ComposerRequire
       package: laravel/telescope
@@ -78,7 +77,7 @@ php-cs-fixer:
       dev: true
 configure-sqlite:
   description: Setup Laravel .env to use sqlite
-  alias: sqlite
+  alias: laravel-sqlite
   actions:
     - type: CaptureReplace
       file: .env
@@ -93,7 +92,7 @@ configure-sqlite:
 fideloper/proxy:
   description: Laravel Proxy Package for handling sessions when behind load balancers or other intermediaries.
   url: https://github.com/fideloper/TrustedProxy
-  alias: proxy
+  alias: laravel-proxy
   actions:
     - type: ComposerRequire
       package: fideloper/proxy
@@ -108,14 +107,13 @@ fideloper/proxy:
 laravelcollective/html:
   description: HTML and Form Builders for the Laravel Framework
   url: https://laravelcollective.com/docs/6.0/html
-  alias: html
+  alias: laravel-html
   actions:
     - type: ComposerRequire
       package: laravelcollective/html
-barryvdh/laravel-debugbar:
+laravel-debugbar:
   description: Laravel Debugbar (Integrates PHP Debug Bar)
   url: https://github.com/barryvdh/laravel-debugbar
-  alias: debugbar
   actions:
     - type: ComposerRequire
       package: barryvdh/laravel-debugbar
@@ -124,10 +122,9 @@ barryvdh/laravel-debugbar:
       command: "vendor:publish"
       args:
         --provider: Barryvdh\Debugbar\ServiceProvider
-maatwebsite/excel:
+laravel-excel:
   description: Supercharged Excel exports and imports
   url: https://laravel-excel.com/
-  alias: excel
   actions:
     - type: ComposerRequire
       package: maatwebsite/excel
@@ -135,10 +132,9 @@ maatwebsite/excel:
       command: "vendor:publish"
       args:
         --provider: Maatwebsite\Excel\ExcelServiceProvider
-rap2hpoutre/laravel-log-viewer:
+laravel-log-viewer:
   description: Laravel log viewer
   url: https://github.com/rap2hpoutre/laravel-log-viewer
-  alias: log-viewer
   actions:
     - type: ComposerRequire
       package: rap2hpoutre/laravel-log-viewer
@@ -149,10 +145,9 @@ rap2hpoutre/laravel-log-viewer:
     - type: AppendFile
       file: routes/web.php
       append: Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-spatie/laravel-backup:
+laravel-backup:
   description: A Laravel package to backup your application
   url: https://docs.spatie.be/laravel-backup/v6/introduction/
-  alias: backup
   actions:
     - type: ComposerRequire
       package: spatie/laravel-backup
