@@ -78,6 +78,7 @@ php-cs-fixer:
       dev: true
 configure-sqlite:
   description: Setup Laravel .env to use sqlite
+  alias: sqlite
   actions:
     - type: CaptureReplace
       file: .env
