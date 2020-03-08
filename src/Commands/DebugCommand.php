@@ -2,9 +2,11 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Commands;
 
-use MortenScheel\PhpDependencyInstaller\Repositories\PresetRepository;
+use MortenScheel\PhpDependencyInstaller\Parser\Recipe;
+use MortenScheel\PhpDependencyInstaller\Repositories\RecipeRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class DebugCommand extends BaseCommand
 {
@@ -28,9 +30,15 @@ class DebugCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $repo = new PresetRepository();
-        $presets = $repo->all();
-        dump($presets->toArray());
+        $repo = new RecipeRepository();
+        $names = $repo->all()->map(function (Recipe $recipe) {
+            return $recipe->getName();
+        });
+        $helper = $this->getHelper('question');
+        $question = new ChoiceQuestion('Select recipes: ', $names->toArray());
+        $question->setMultiselect(true);
+        $choice = $helper->ask($input, $output, $question);
+        dump($choice);
         return 0;
     }
 }

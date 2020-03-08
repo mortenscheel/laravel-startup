@@ -6,14 +6,15 @@ use MortenScheel\PhpDependencyInstaller\ActionManager;
 use MortenScheel\PhpDependencyInstaller\Actions\Action;
 use MortenScheel\PhpDependencyInstaller\Git;
 use MortenScheel\PhpDependencyInstaller\Parser\Preset;
+use MortenScheel\PhpDependencyInstaller\Parser\Recipe;
 use MortenScheel\PhpDependencyInstaller\Repositories\RecipeRepository;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class RecipeCommand extends BaseCommand
@@ -74,6 +75,15 @@ class RecipeCommand extends BaseCommand
             return $this->shell->execute(['open', $path]) ? 0 : 1;
         }
         $recipe_names = $input->getArgument('recipes');
+        $question_helper = $this->getHelper('question');
+        if (empty($recipe_names) && !$input->getOption('no-interaction')) {
+            $all = $repo->all()->map(function (Recipe $recipe) {
+                return $recipe->getName();
+            })->toArray();
+            $question = new ChoiceQuestion('Please select recipes to install:', $all);
+            $question->setMultiselect(true);
+            $recipe_names = $question_helper->ask($input, $output, $question);
+        }
         if (empty($recipe_names)) {
             $output->writeln('<error>Expected one or more recipes to install</error>');
             return 1;
@@ -103,8 +113,7 @@ class RecipeCommand extends BaseCommand
             !$input->getOption('force')) {
             $manager->showActionsTable($output, $optimize);
             $question = new ConfirmationQuestion("Do you want to perform these actions?\n");
-            $helper = new QuestionHelper();
-            if (!$helper->ask($input, $output, $question)) {
+            if (!$question_helper->ask($input, $output, $question)) {
                 return 0;
             }
         }

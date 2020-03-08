@@ -2,13 +2,9 @@
 <?php
 
 use Dotenv\Dotenv;
-use MortenScheel\PhpDependencyInstaller\Commands\MenuCommand;
-use MortenScheel\PhpDependencyInstaller\Commands\PresetCommand;
-use MortenScheel\PhpDependencyInstaller\Commands\ShowCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\DebugCommand;
+use MortenScheel\PhpDependencyInstaller\Commands\PresetCommand;
 use MortenScheel\PhpDependencyInstaller\Commands\RecipeCommand;
-use MortenScheel\PhpDependencyInstaller\Filesystem;
-use Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -24,12 +20,10 @@ Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
 $app = new Symfony\Component\Console\Application('PHP Dependency Installer', '1.0-beta');
 $app->add(new RecipeCommand());
 $app->add(new PresetCommand());
-$app->add(new MenuCommand());
-$app->add(new CompletionCommand());
 if (\getenv('DEBUG')) {
     $app->add(new DebugCommand());
 }
-$app->setDefaultCommand('menu');
+$app->setDefaultCommand('recipe');
 
 /** @noinspection PhpUnhandledExceptionInspection */
 $app->run();
@@ -54,8 +48,8 @@ function debug_timer(Closure $callback, int $count = 10)
         $callback();
         $times[] = \round(\microtime(true) - $start, 3);
     }
-    $avg = array_sum($times) / $count;
-    $min = min($times);
-    $max = max($times);
-    return compact('avg', 'min', 'max', 'times');
+    $avg = \array_sum($times) / $count;
+    $min = \min($times);
+    $max = \max($times);
+    return \compact('avg', 'min', 'max', 'times');
 }

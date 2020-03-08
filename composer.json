@@ -28,7 +28,6 @@
     "symfony/yaml": "^4.4",
     "symfony/var-dumper": "^4.4|^5.0",
     "tightenco/collect": "^6.1",
-    "php-school/cli-menu": "^4.0",
     "vlucas/phpdotenv": "^4.1",
     "alecrabbit/php-console-spinner": "^0.53.0",
     "stecman/symfony-console-completion": "^0.11.0"
@@ -48,9 +47,6 @@
     "phpunit/phpunit": "^7.5|^8|^9"
   },
   "config": {
-    "optimize-autoloader": true,
-    "platform": {
-      "ext-posix": "0"
-    }
+    "optimize-autoloader": true
   }
 }
