@@ -82,7 +82,7 @@ class ActionManager
         /** @var Collection $require_dev */
         $require_dev = $grouped->get('require-dev');
         if ($require) {
-            $skip_update = $require_dev->isNotEmpty();
+            $skip_update = $require_dev && $require_dev->isNotEmpty();
             if ($require->count() === 1) {
                 /** @var ComposerRequire $action */
                 $action = $require->first();
