@@ -77,10 +77,12 @@ class RecipeCommand extends BaseCommand
         $recipe_names = $input->getArgument('recipes');
         $question_helper = $this->getHelper('question');
         if (empty($recipe_names) && !$input->getOption('no-interaction')) {
-            $all = $repo->all()->map(function (Recipe $recipe) {
-                return $recipe->getName();
+            $all = $repo->all()->mapWithKeys(function (Recipe $recipe) {
+                return [
+                    ($recipe->getAlias() ??$recipe->getName()) => $recipe->getDescription()
+                ];
             })->toArray();
-            $question = new ChoiceQuestion('Please select recipes to install:', $all);
+            $question = new ChoiceQuestion('Please select recipes to install (comma separated):', $all);
             $question->setMultiselect(true);
             $recipe_names = $question_helper->ask($input, $output, $question);
         }
