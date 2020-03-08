@@ -10,6 +10,7 @@ return (new \PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setCacheFile('.php_cs.cache')
     ->setFinder($finder)
+    ->setLineEnding(\PHP_EOL)
     ->setRules([
         'psr0' => false,
         '@PSR2' => true,
