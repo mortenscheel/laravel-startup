@@ -95,21 +95,17 @@ class PresetCommand extends BaseCommand
             case Git::STATUS_NOT_INSTALLED:
                 return true;
             case Git::STATUS_NOT_INITIALIZED:
-                $error = <<<ERROR
-<fg=red>No git repository found.
+                $error = '<fg=red>No git repository found.
 This command modifies your project files. To ensure that you can undo
 the modifications made, a git repository must be initialzed and all
-changes committed before running the command.</>
-ERROR;
+changes committed before running the command.</>';
                 break;
 
             case Git::STATUS_DIRTY:
-                $error = <<<ERROR
-<fg=red>The current working directory contains uncommitted changes.
+                $error = '<fg=red>The current working directory contains uncommitted changes.
 This command modifies your project files. To ensure that you can undo
 the modifications made, the working directory must be clean 
-before running the command.</>
-ERROR;
+before running the command.</>';
                 break;
             default:
                 return false;

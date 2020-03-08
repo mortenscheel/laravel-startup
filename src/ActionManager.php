@@ -149,11 +149,9 @@ class ActionManager
     {
         if ($this->hasMigrateCommand() && !$this->canMigrate()) {
             $output->writeln(
-                <<<ERROR
-<fg=red>Invalid database configuration detected.
+                '<fg=red>Invalid database configuration detected.
 The list of actions contains a database migration, which would have failed.
-Installation aborted.</>
-ERROR
+Installation aborted.</>'
             );
             return 1;
         }
