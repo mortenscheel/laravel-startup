@@ -149,7 +149,6 @@ class PhpDependencyInstallerMenu
                     $name .= " ($description)";
                 }
                 $checkbox = new CheckboxItem($name, function () {
-
                 }, false, true);
                 $checkbox->setChecked();
                 $submenu->addMenuItem($checkbox);

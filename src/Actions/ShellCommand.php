@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller\Actions;
-
 
 use Symfony\Component\Process\Process;
 
@@ -29,6 +27,6 @@ class ShellCommand extends Action implements AsyncAction
 
     public function getProcess(): Process
     {
-        return $this->shell->createProcess(explode(' ', $this->command_line));
+        return $this->shell->createProcess(\explode(' ', $this->command_line));
     }
 }

@@ -2,8 +2,6 @@
 
 namespace MortenScheel\PhpDependencyInstaller\Commands;
 
-use MortenScheel\PhpDependencyInstaller\ActionRunner;
-use MortenScheel\PhpDependencyInstaller\Actions\ComposerRequire;
 use MortenScheel\PhpDependencyInstaller\Repositories\PresetRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

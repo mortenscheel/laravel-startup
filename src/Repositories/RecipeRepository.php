@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller\Repositories;
-
 
 use MortenScheel\PhpDependencyInstaller\Filesystem;
 use MortenScheel\PhpDependencyInstaller\Parser\Recipe;
@@ -41,12 +39,12 @@ class RecipeRepository
     public function getCustomRecipeConfigurationPath(bool $create_if_missing = false)
     {
         $path = $this->filesystem->getGlobalConfigPath('recipes.yml');
-        if ($create_if_missing){
+        if ($create_if_missing) {
             $folder = $this->filesystem->getGlobalConfigPath();
-            if (!$this->filesystem->exists($folder)){
+            if (!$this->filesystem->exists($folder)) {
                 $this->filesystem->mkdir($folder, 0755);
             }
-            if (!$this->filesystem->exists($path)){
+            if (!$this->filesystem->exists($path)) {
                 $template = PDI_ROOT . '/config/recipes-template.yml';
                 $this->filesystem->copy($template, $path);
             }
@@ -90,5 +88,4 @@ class RecipeRepository
                 return $recipe_name === $name || ($allow_aliases && array_get($definition, 'alias') === $name);
             });
     }
-
 }

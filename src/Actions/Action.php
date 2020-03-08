@@ -117,13 +117,13 @@ abstract class Action implements Arrayable
                 '--global',
                 'data-dir']);
             $detect_global->run();
-            $global_root = rtrim($detect_global->getOutput());
+            $global_root = \rtrim($detect_global->getOutput());
             $global = $global_root . '/vendor/composer/autoload_classmap.php';
-            if (file_exists($global)) {
+            if (\file_exists($global)) {
                 $map = collect(require $global);
             }
             $local = \getcwd() . '/vendor/composer/autoload_classmap.php';
-            if (file_exists($local)) {
+            if (\file_exists($local)) {
                 $map = $map->merge(collect(require $local));
             }
             self::$_classmap = $map;

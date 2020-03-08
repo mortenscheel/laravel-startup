@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller;
-
 
 use Symfony\Component\Process\Process;
 
@@ -38,12 +36,12 @@ class Shell
     {
         $output = $this->process_output;
         $this->process_output = '';
-        return rtrim($output);
+        return \rtrim($output);
     }
 
     public function createComposerProcess(array $command): Process
     {
-        return $this->createProcess(array_merge([
+        return $this->createProcess(\array_merge([
             $this->getExecutable('php'),
             '-n',
             $this->getExecutable('composer')
@@ -52,7 +50,7 @@ class Shell
 
     public function createArtisanProcess(array $command): Process
     {
-        return $this->createProcess(array_merge([
+        return $this->createProcess(\array_merge([
             $this->getExecutable('php'),
             '-n',
             'artisan'

@@ -53,7 +53,7 @@ class RecipeCommand extends BaseCommand
             $table->setStyle('box')
                 ->setColumnMaxWidth(1, 50)
                 ->setColumnMaxWidth(2, 60)
-            ->setHeaders(['Name', 'Description', 'Actions']);
+                ->setHeaders(['Name', 'Description', 'Actions']);
             foreach ($repo->all() as $index => $recipe) {
                 if ($index !== 0) {
                     $table->addRow(new TableSeparator());
@@ -69,7 +69,7 @@ class RecipeCommand extends BaseCommand
             $table->render();
             return 0;
         }
-        if ($input->getOption('edit')){
+        if ($input->getOption('edit')) {
             $path = $repo->getCustomRecipeConfigurationPath(true);
             return $this->shell->execute(['open', $path]) ? 0 : 1;
         }

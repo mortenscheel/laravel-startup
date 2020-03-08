@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller\Repositories;
-
 
 use MortenScheel\PhpDependencyInstaller\Filesystem;
 use MortenScheel\PhpDependencyInstaller\Parser\Preset;
@@ -45,10 +43,10 @@ class PresetRepository
     protected function getPresetFiles()
     {
         if ($this->filesystem->exists($this->getPresetsPath())) {
-            return collect(scandir($this->getPresetsPath()))->filter(function ($path) {
-                return preg_match('/\.yml$/', $path);
+            return collect(\scandir($this->getPresetsPath()))->filter(function ($path) {
+                return \preg_match('/\.yml$/', $path);
             })->map(function ($path) {
-                return $this->getPresetsPath() . DIRECTORY_SEPARATOR . $path;
+                return $this->getPresetsPath() . \DIRECTORY_SEPARATOR . $path;
             })->values();
         }
         return collect();
@@ -60,7 +58,7 @@ class PresetRepository
         if (!$preset_name) {
             return $path;
         }
-        return sprintf('%s%s%s.yml', $path, DIRECTORY_SEPARATOR, $preset_name);
+        return \sprintf('%s%s%s.yml', $path, \DIRECTORY_SEPARATOR, $preset_name);
     }
 
     public function save(Preset $preset): bool

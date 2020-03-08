@@ -56,10 +56,11 @@ class ComposerRequire extends Action implements AsyncAction
 
     public function isInstalled(): bool
     {
-        return $this->shell->createComposerProcess([
-            'show',
-            '--quiet',
-            $this->package]
+        return $this->shell->createComposerProcess(
+            [
+                'show',
+                '--quiet',
+                $this->package]
         )->run() === 0;
     }
 

@@ -38,7 +38,7 @@ class AppendPhpArrayTransformer implements Transformer
         if ($variable_capture_match = $this->captureVariableBody()) {
             [$array_content, $array_offset] = $variable_capture_match[1];
             // Capture final line and indentation
-            if (\preg_match('~' . PHP_EOL . '( *)(\S+)?\s+$~u', $array_content, $final_line_match, \PREG_OFFSET_CAPTURE)) {
+            if (\preg_match('~' . \PHP_EOL . '( *)(\S+)?\s+$~u', $array_content, $final_line_match, \PREG_OFFSET_CAPTURE)) {
                 $indent = $final_line_match[1][0];
                 if (isset($final_line_match[2])) {
                     [$final_line, $final_line_offset] = $final_line_match[2];
@@ -52,7 +52,7 @@ class AppendPhpArrayTransformer implements Transformer
                     $before .= ',';
                 }
                 $after = \mb_substr($this->original, $offset);
-                return \sprintf('%s%s%s%s,%s', $before, PHP_EOL, $indent, $this->value, $after);
+                return \sprintf('%s%s%s%s,%s', $before, \PHP_EOL, $indent, $this->value, $after);
             }
             if (!\preg_match('~\\n~', $array_content)) {
                 // Single line array

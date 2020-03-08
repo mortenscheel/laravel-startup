@@ -51,5 +51,4 @@ class Git
         $this->shell->execute(['git', 'status', '--short']);
         return $this->shell->flushOutput() !== '';
     }
-
 }

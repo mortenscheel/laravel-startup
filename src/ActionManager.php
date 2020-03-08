@@ -148,7 +148,8 @@ class ActionManager
     public function execute(OutputInterface $output, bool $optimize = true, bool $verbose = false)
     {
         if ($this->hasMigrateCommand() && !$this->canMigrate()) {
-            $output->writeln(<<<ERROR
+            $output->writeln(
+                <<<ERROR
 <fg=red>Invalid database configuration detected.
 The list of actions contains a database migration, which would have failed.
 Installation aborted.</>

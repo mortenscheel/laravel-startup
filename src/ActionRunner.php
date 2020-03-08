@@ -23,7 +23,7 @@ class ActionRunner
     public function run(OutputInterface $output, bool $verbose = false): bool
     {
         $output_adapter = new SymfonyOutputAdapter($output);
-        $description = sprintf('<fg=white>%s</>', $this->action->getDescription());
+        $description = \sprintf('<fg=white>%s</>', $this->action->getDescription());
         $spinner = new SnakeSpinner($description, $output_adapter);
         $spinner->begin();
         if ($this->action instanceof AsyncAction) {
@@ -33,7 +33,7 @@ class ActionRunner
             }
             $process->start();
             while ($process->isRunning()) {
-                usleep(80000);
+                \usleep(80000);
                 if ($verbose) {
                     $stdout = $process->getIncrementalOutput();
                     $stderr = $process->getIncrementalErrorOutput();
@@ -47,7 +47,7 @@ class ActionRunner
                 $spinner->spin();
             }
             $success = $process->isSuccessful();
-            $error = sprintf("%s\n%s", $process->getOutput(), $process->getErrorOutput());
+            $error = \sprintf("%s\n%s", $process->getOutput(), $process->getErrorOutput());
         } else {
             $success = $this->action->execute();
             $error = $this->action->getError();

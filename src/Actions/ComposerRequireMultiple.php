@@ -27,7 +27,7 @@ class ComposerRequireMultiple extends Action implements AsyncAction
 
     public function getDescription(): string
     {
-        return sprintf(
+        return \sprintf(
             'Install %s packages: %s',
             $this->packages->count() . ($this->dev ? ' development' : ''),
             $this->packages->join(', ', ' and ')
@@ -41,7 +41,7 @@ class ComposerRequireMultiple extends Action implements AsyncAction
 
     public function getProcess(): Process
     {
-        $command = array_merge([
+        $command = \array_merge([
             'require',
             '--no-interaction'
         ], $this->packages->toArray());

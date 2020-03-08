@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MortenScheel\PhpDependencyInstaller\Parser;
-
 
 use MortenScheel\PhpDependencyInstaller\Repositories\PresetRepository;
 use Tightenco\Collect\Contracts\Support\Arrayable;

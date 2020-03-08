@@ -52,7 +52,7 @@ class ArtisanCommand extends Action implements AsyncAction
 
     public function getProcess(): Process
     {
-        $command = array_merge([$this->command], $this->parseArtisanArguments($this->arguments));
+        $command = \array_merge([$this->command], $this->parseArtisanArguments($this->arguments));
         return $this->shell->createArtisanProcess($command);
     }
 }
