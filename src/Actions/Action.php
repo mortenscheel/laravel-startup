@@ -4,6 +4,7 @@ namespace MortenScheel\PhpDependencyInstaller\Actions;
 
 use MortenScheel\PhpDependencyInstaller\Actions\Files\AddClassImport;
 use MortenScheel\PhpDependencyInstaller\Actions\Files\AddTrait;
+use MortenScheel\PhpDependencyInstaller\Actions\Files\AppendFile;
 use MortenScheel\PhpDependencyInstaller\Actions\Files\AppendPhpArray;
 use MortenScheel\PhpDependencyInstaller\Actions\Files\AppendPhpMethod;
 use MortenScheel\PhpDependencyInstaller\Actions\Files\CaptureReplace;
@@ -88,6 +89,9 @@ abstract class Action implements Arrayable
             case 'shell':
             case 'cli':
                 return ShellCommand::class;
+            case 'AppendFile':
+            case 'append-file':
+                return AppendFile::class;
             default:
                 return null;
         }
