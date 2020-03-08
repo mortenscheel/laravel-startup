@@ -146,7 +146,9 @@ rap2hpoutre/laravel-log-viewer:
       command: "vendor:publish"
       args:
         --provider: Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider
-
+    - type: AppendFile
+      file: routes/web.php
+      append: Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 
 
