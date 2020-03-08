@@ -89,6 +89,21 @@ configure-sqlite:
       replacement: "#D"
     - type: ShellCommand
       command: "touch database/database.sqlite"
+fideloper/proxy:
+  description: Laravel Proxy Package for handling sessions when behind load balancers or other intermediaries.
+  url: https://github.com/fideloper/TrustedProxy
+  alias: proxy
+  actions:
+    - type: ComposerRequire
+      package: fideloper/proxy
+    - type: ArtisanCommand
+      command: "vendor:publish"
+      args:
+        --provider: Fideloper\Proxy\TrustedProxyServiceProvider
+    - type: AppendPhpArray
+      file: app/Http/Kernel.php
+      array: "$middleware"
+      value: \Fideloper\Proxy\TrustProxies::class
 
 
 
