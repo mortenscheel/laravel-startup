@@ -112,6 +112,17 @@ laravelcollective/html:
   actions:
     - type: ComposerRequire
       package: laravelcollective/html
+barryvdh/laravel-debugbar:
+  description: Laravel Debugbar (Integrates PHP Debug Bar)
+  url: https://github.com/barryvdh/laravel-debugbar
+  alias: debugbar
+  actions:
+    - type: ComposerRequire
+      package: barryvdh/laravel-debugbar
+    - type: ArtisanCommand
+      command: "vendor:publish"
+      args:
+        --provider: Barryvdh\Debugbar\ServiceProvider
 
 
 
