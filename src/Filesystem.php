@@ -14,7 +14,7 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem
         if (\mb_strpos($path, '/') === 0) {
             return $path; // UNIX
         }
-        if (\preg_match('~^[a-z]:]~i', $path)) {
+        if (\preg_match('~^[a-z]:~i', $path)) {
             return $path; // Windows
         }
         if (\mb_stripos($path, '~') === 0) {
