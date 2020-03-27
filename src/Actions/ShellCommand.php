@@ -27,6 +27,17 @@ class ShellCommand extends Action implements AsyncAction
 
     public function getProcess(): Process
     {
-        return $this->shell->createProcess(\explode(' ', $this->command_line));
+        return $this->shell->createProcess($this->createCommand($this->command_line));
+    }
+
+    private function createCommand(string $command_string)
+    {
+        return \array_map(function ($part) {
+            // Substitute ~ with absolute path
+            if (\mb_stripos($part, '~') === 0) {
+                return \getenv('HOME') . \mb_substr($part, 1);
+            }
+            return $part;
+        }, \explode(' ', $this->command_line));
     }
 }
