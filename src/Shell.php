@@ -41,11 +41,16 @@ class Shell
 
     public function createComposerProcess(array $command): Process
     {
-        return $this->createProcess(\array_merge([
+        $composer = [
             $this->getExecutable('php'),
             '-n',
             $this->getExecutable('composer')
-        ], $command));
+        ];
+        if (OS::detect() === OS::WINDOWS) {
+            // Temporary fix
+            $composer = [$this->getExecutable('composer')];
+        }
+        return $this->createProcess(\array_merge($composer, $command));
     }
 
     public function createArtisanProcess(array $command): Process
