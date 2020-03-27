@@ -1,6 +1,7 @@
 {
   "name": "mortenscheel/php-dependency-installer",
   "description": "Automate dependency installation and setup with reusable recipes",
+  "version": "0.1",
   "license": "MIT",
   "authors": [
     {
