@@ -6,11 +6,20 @@ laravel-ide-helper:
     - type: ComposerRequire
       package: barryvdh/laravel-ide-helper
       dev: true
+    - type: ComposerRequire
+      package: doctrine/dbal
+      dev: true
     - type: ArtisanCommand
       command: "vendor:publish"
       args:
         --provider: Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider
         --tag: config
+    - type: ArtisanCommand
+      command: "ide-helper:eloquent"
+    - type: ArtisanCommand
+      command: "ide-helper:meta"
+    - type: ArtisanCommand
+      command: "ide-helper:generate"
 laravel-cors:
   description: Adds CORS (Cross-Origin Resource Sharing) headers support in your Laravel application
   url: https://github.com/fruitcake/laravel-cors
