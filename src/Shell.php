@@ -68,6 +68,8 @@ class Shell
             $command[] = $executable;
             if ($this->execute($command)) {
                 $path = $this->flushOutput();
+                // Use first line in case of multi line output
+                $path = \explode(\PHP_EOL, $path)[0];
             }
             $this->executables[$executable] = $path ?? null;
         }
