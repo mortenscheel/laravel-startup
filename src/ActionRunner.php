@@ -31,6 +31,9 @@ class ActionRunner
             if ($output->isDecorated()) {
                 $process->setPty(true);
             }
+            if ($verbose) {
+                $output->writeln('Start processing ' . $process->getCommandLine());
+            }
             $process->start();
             while ($process->isRunning()) {
                 \usleep(80000);
